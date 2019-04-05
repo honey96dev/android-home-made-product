@@ -3,6 +3,7 @@ package com.honey96dev.homemadeproduct;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +20,15 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -29,25 +40,26 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Id to identity READ_CONTACTS permission request.
      */
-    private static final int REQUEST_READ_CONTACTS = 0;
+    static final int REQUEST_READ_CONTACTS = 0;
 
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
+    static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    UserLoginTask mAuthTask = null;
 
     // UI references.
-    private EditText mUsernameView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    EditText mUsernameView;
+    EditText mPasswordView;
+    Button mUsernameSignInButton;
+    View mProgressView;
+    View mLoginFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,38 +80,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
-        mUsernameSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+        mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        mUsernameView.setText("usertest");
+        mPasswordView.setText("123456");
     }
 
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mUsernameView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
+    public void onUsernameSignInButtonClicked(View v) {
+        attemptLogin();
+    }
+
+    public void onForgetPasswordButtonClicked(View v) {
+
+    }
+
+    public void onCreateAccountButtonClicked(View v) {
+
     }
 
     /**
@@ -107,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
@@ -124,7 +123,11 @@ public class LoginActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -146,11 +149,11 @@ public class LoginActivity extends AppCompatActivity {
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(username, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask.execute();
         }
     }
 
-    private boolean isPasswordValid(String password) {
+    boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
     }
@@ -159,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
+    void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -195,10 +198,13 @@ public class LoginActivity extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<String, Void, String> {
+        String METHOD_GET = "GET";
+        static final int READ_TIMEOUT = 15000;
+        static final int CONNECTION_TIMEOUT = 15000;
 
-        private final String mUsername;
-        private final String mPassword;
+        final String mUsername;
+        final String mPassword;
 
         UserLoginTask(String username, String password) {
             mUsername = username;
@@ -206,39 +212,85 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
+        protected String doInBackground(String... params) {
+            String stringUrl = String.format("http://173.199.122.197/login.php?username=%s&password=%s", mUsername, mPassword);
+            String result;
+            String inputLine;
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+                //Create a URL object holding our url
+                URL myUrl = new URL(stringUrl);
+                //Create a connection
+                HttpURLConnection connection =(HttpURLConnection)myUrl.openConnection();
+                //Set methods and timeouts
+                connection.setRequestMethod(METHOD_GET);
+                connection.setReadTimeout(READ_TIMEOUT);
+                connection.setConnectTimeout(CONNECTION_TIMEOUT);
+//            connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                connection.setRequestProperty("Accept","application/json");
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                Log.e("url", connection.getURL().toString());
+                connection.connect();
+
+                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(streamReader);
+                StringBuilder stringBuilder = new StringBuilder();
+                while((inputLine = reader.readLine()) != null){
+                    stringBuilder.append(inputLine);
                 }
-            }
 
-            // TODO: register the new account here.
-            return false;
+                reader.close();
+                streamReader.close();
+
+                result = stringBuilder.toString();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+                result = null;
+            }
+            return result;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final String responseText) {
             mAuthTask = null;
             showProgress(false);
+            Log.e("login-result", responseText);
 
-            if (success) {
-                finish();
-            } else {
-//                mPasswordView.setError(getString(R.string.error_incorrect_password));
-//                mPasswordView.requestFocus();
-//                Snackbar.make(, R.string.error_invalid_credential, Snackbar.LENGTH_SHORT).show();
+            try {
+                JSONObject json = new JSONObject(responseText);
+                String result = json.getString("result");
+                if (result.equals("success")) {
+                    JSONObject user = json.getJSONObject("user");
+                    String type = user.getString("Type").toLowerCase();
+                    if (!type.equals("productive_family") && !type.equals("client")) {
+                        Snackbar.make(mUsernameSignInButton, R.string.error_invalid_user_type, Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+                    G.userInfo.UserID = user.getString("UserID");
+                    G.userInfo.Username = user.getString("Username");
+                    G.userInfo.FirstName = user.getString("FirstName");
+                    G.userInfo.LastName = user.getString("LastName");
+                    G.userInfo.Email = user.getString("Email");
+                    G.userInfo.Password = user.getString("Password");
+                    G.userInfo.City = user.getString("City");
+                    G.userInfo.Phone = user.getString("Phone");
+                    G.userInfo.Type = user.getString("Type");
+
+                    Intent intent = new Intent(getBaseContext(), CustomerProductListActivity.class);
+                    startActivity(intent);
+                    mPasswordView.setText("");
+                } else {
+                    Snackbar.make(mUsernameSignInButton, json.getString("msg"), Snackbar.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
 

@@ -24,10 +24,12 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/dimen_margin7"
+        android:layout_marginRight="@dimen/dimen_margin7">
 
         <LinearLayout
-            android:id="@+id/uername_login_form"
+            android:id="@+id/username_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -52,12 +54,11 @@
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_margin7"
-                    android:layout_marginRight="@dimen/dimen_margin7"
                     android:hint="@string/prompt_username"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="@dimen/dimen_textSize5" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -69,50 +70,56 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_margin7"
-                    android:layout_marginRight="@dimen/dimen_margin7"
                     android:hint="@string/prompt_password"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="@dimen/dimen_textSize5" />
 
             </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/username_sign_in_button"
                 style="?android:textAppearanceSmall"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/dimen_margin7"
                 android:layout_marginTop="16dp"
+                android:layout_marginRight="@dimen/dimen_margin7"
+                android:onClick="onUsernameSignInButtonClicked"
+                android:padding="@dimen/dimen_margin3"
                 android:text="@string/action_sign_in_short"
-                android:textStyle="bold" />
+                android:textSize="@dimen/dimen_textSize5"
+                android:textStyle="bold"
+                android:theme="@style/PrimaryButton" />
 
 
-            <TextView
-                android:id="@+id/ForgetPassword"
+            <Button
+                android:id="@+id/forget_password_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_margin6"
-                android:text="Forget Password?"
+                android:onClick="onForgetPasswordButtonClicked"
+                android:text="@string/action_forget_password"
                 android:textColor="@color/darkBlue"
-                android:textSize="@dimen/dimen_textSize4" />
+                android:textSize="@dimen/dimen_textSize4"
+                android:theme="@style/PrimaryFlatButton" />
 
-            <TextView
-                android:id="@+id/b_toReg"
+            <Button
+                android:id="@+id/create_account_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dimen_margin2"
-                android:text="Create Account"
+                android:onClick="onCreateAccountButtonClicked"
+                android:text="@string/action_create_account"
                 android:textColor="@color/lightBlue"
                 android:textSize="@dimen/dimen_textSize4"
-
-                />
+                android:theme="@style/PrimaryFlatButton" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
