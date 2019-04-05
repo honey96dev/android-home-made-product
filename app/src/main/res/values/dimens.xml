@@ -16,14 +16,14 @@
     <dimen name="dimen_margin9">100dp</dimen>
     <dimen name="dimen_margin10">160dp</dimen>
 
-    <dimen name="dimen_textSize1">10dp</dimen>
-    <dimen name="dimen_textSize2">12dp</dimen>
-    <dimen name="dimen_textSize3">14dp</dimen>
-    <dimen name="dimen_textSize4">16dp</dimen>
-    <dimen name="dimen_textSize5">18dp</dimen>
-    <dimen name="dimen_textSize6">22dp</dimen>
-    <dimen name="dimen_textSize7">28dp</dimen>
-    <dimen name="dimen_textSize8">36dp</dimen>
-    <dimen name="dimen_textSize9">48dp</dimen>
-    <dimen name="dimen_textSize10">72dp</dimen>
+    <dimen name="dimen_textSize1">10sp</dimen>
+    <dimen name="dimen_textSize2">12sp</dimen>
+    <dimen name="dimen_textSize3">14sp</dimen>
+    <dimen name="dimen_textSize4">16sp</dimen>
+    <dimen name="dimen_textSize5">18sp</dimen>
+    <dimen name="dimen_textSize6">22sp</dimen>
+    <dimen name="dimen_textSize7">28sp</dimen>
+    <dimen name="dimen_textSize8">36sp</dimen>
+    <dimen name="dimen_textSize9">48sp</dimen>
+    <dimen name="dimen_textSize10">72sp</dimen>
 </resources>

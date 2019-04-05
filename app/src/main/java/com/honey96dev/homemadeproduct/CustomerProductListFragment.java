@@ -1,37 +1,40 @@
 package com.honey96dev.homemadeproduct;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
+import com.honey96dev.homemadeproduct.tools.ScaleUpAndDownItemAnimator;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.ExecutionException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
 public class CustomerProductListFragment extends Fragment {
-    EditText txt1;
-    EditText txt2;
-    EditText txt3;
-    EditText txt4;
-    EditText txt5;
+    Handler updateUIHandler = null;
+    final static int MESSAGE_UPDATE_TEXT_CHILD_THREAD =1;
+    final static int MESSAGE_SHOW_TOAST_THREAD =2;
 
-    String txt1Text = "";
-    String txt2Text = "";
-    String txt3Text = "";
-    String txt4Text = "";
-    String txt5Text = "";
-
-    private Handler updateUIHandler = null;
-    private final static int MESSAGE_UPDATE_TEXT_CHILD_THREAD =1;
-    private final static int MESSAGE_SHOW_TOAST_THREAD =2;
+    ArrayList<CustomerProductListAdapter.CustomerProduct> mProducts = new ArrayList<CustomerProductListAdapter.CustomerProduct>();
+    CustomerProductListAdapter mProductsAdapter;
+    RecyclerView mProductsView;
+    CustomerProductsTask mCustomerProductsTask;
 
     public CustomerProductListFragment() {
     }
@@ -50,73 +53,23 @@ public class CustomerProductListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_customer_product_list, container, false);
 
-//        createUpdateUiHandler();
-//        txt1 = (EditText) rootView.findViewById(R.id.txt1);
-//        txt2 = (EditText) rootView.findViewById(R.id.txt2);
-//        txt3 = (EditText) rootView.findViewById(R.id.txt3);
-//        txt4 = (EditText) rootView.findViewById(R.id.txt4);
-//        txt5 = (EditText) rootView.findViewById(R.id.txt5);
-//
-//        Message message = new Message();
-//        message.what = MESSAGE_UPDATE_TEXT_CHILD_THREAD;
-//        updateUIHandler.sendMessage(message);
-//
-//        Button btn = (Button) rootView.findViewById(R.id.btn);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Thread thread = new Thread() {
-//                    @Override
-//                    public void run() {
-//                        if (G.SERVER_IP == "" || G.SERVER_PORT == "") {
-//                            Message message = new Message();
-//                            message.what = MESSAGE_SHOW_TOAST_THREAD;
-//                            updateUIHandler.sendMessage(message);
-//                            return;
-//                        }
-//                        String myUrl = String.format("http://%s:%s/test.json", G.SERVER_IP, G.SERVER_PORT);
-//                        //String to place our result in
-//                        String result;
-//                        //Instantiate new instance of our class
-//                        HttpRequest request = new HttpRequest();
-//                        request.setMethod("GET");
-//                        //Perform the doInBackground method, passing in our url
-//                        try {
-//                            result = request.execute(myUrl).get();
-//                            if (result == null) {
-//                                return;
-//                            }
-//
-//                            JSONObject json = new JSONObject(result);
-//                            JSONObject app = json.getJSONObject("AppName");
-//                            JSONObject stats = app.getJSONObject("stats");
-//
-//                            txt1Text = stats.getString("state1");
-//                            txt2Text = stats.getString("state2");
-//                            txt3Text = stats.getString("state3");
-//                            txt4Text = stats.getString("state4");
-//                            txt5Text = stats.getString("state5");
-//
-//                            Message message = new Message();
-//                            message.what = MESSAGE_UPDATE_TEXT_CHILD_THREAD;
-//                            updateUIHandler.sendMessage(message);
-//                        } catch (ExecutionException e) {
-//                            e.printStackTrace();
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                };
-//                thread.start();
-//            }
-//        });
+        mProductsAdapter = new CustomerProductListAdapter(getContext(), mProducts);
+
+        mProductsView = (RecyclerView) rootView.findViewById(R.id.product_recycler_view);
+        mProductsView.setHasFixedSize(true);
+        mProductsView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mProductsView.setItemAnimator(new ScaleUpAndDownItemAnimator());
+        mProductsView.setAdapter(mProductsAdapter);
+
+
+
+        mCustomerProductsTask = new CustomerProductsTask();
+        mCustomerProductsTask.execute();
 
         return rootView;
     }
 
-    private void createUpdateUiHandler()
+    void createUpdateUiHandler()
     {
         if(updateUIHandler == null)
         {
@@ -126,18 +79,84 @@ public class CustomerProductListFragment extends Fragment {
                     // Means the message is sent from child thread.
                     switch (msg.what) {
                         case MESSAGE_UPDATE_TEXT_CHILD_THREAD:
-                            txt1.setText(txt1Text);
-                            txt2.setText(txt2Text);
-                            txt3.setText(txt3Text);
-                            txt4.setText(txt4Text);
-                            txt5.setText(txt5Text);
                             break;
                         case MESSAGE_SHOW_TOAST_THREAD:
-                            Toast.makeText(getContext(), "Select Server", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
             };
+        }
+    }
+
+    class CustomerProductsTask extends AsyncTask<String, Void, String> {
+        String mMethod = "GET";
+        static final int READ_TIMEOUT = 15000;
+        static final int CONNECTION_TIMEOUT = 15000;
+
+        @Override
+        protected String doInBackground(String... params){
+            String stringUrl = String.format("http://173.199.122.197/get_stores.php?stores");
+            String result;
+            String inputLine;
+
+            try {
+                //Create a URL object holding our url
+                URL myUrl = new URL(stringUrl);
+                //Create a connection
+                HttpURLConnection connection =(HttpURLConnection)myUrl.openConnection();
+                //Set methods and timeouts
+                connection.setRequestMethod(mMethod);
+                connection.setReadTimeout(READ_TIMEOUT);
+                connection.setConnectTimeout(CONNECTION_TIMEOUT);
+                connection.setRequestProperty("Accept","application/json");
+
+                connection.connect();
+
+                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(streamReader);
+                StringBuilder stringBuilder = new StringBuilder();
+                while((inputLine = reader.readLine()) != null){
+                    stringBuilder.append(inputLine);
+                }
+
+                reader.close();
+                streamReader.close();
+
+                result = stringBuilder.toString();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+                result = null;
+            }
+            return result;
+        }
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+
+            mProducts.clear();
+
+            try {
+                Log.e("products-api", result);
+                JSONObject json = new JSONObject(result);
+                JSONArray stores = json.getJSONArray("stores");
+                JSONObject item;
+                int cnt = stores.length();
+                for (int i = 0; i < cnt; i++) {
+                    item = stores.getJSONObject(i);
+                    mProducts.add(new CustomerProductListAdapter.CustomerProduct(
+                            item.getString("id"),
+                            item.getString("name"),
+                            item.getString("description"),
+                            item.getString("icon"),
+                            item.getString("likes")
+                    ));
+                }
+//                stores.getJSONObject()
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            mProductsAdapter.notifyDataSetChanged();
         }
     }
 }
