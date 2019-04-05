@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.honey96dev.homemadeproduct.G;
 import com.honey96dev.homemadeproduct.R;
 import com.honey96dev.homemadeproduct.tools.ScaleUpAndDownItemAnimator;
 
@@ -36,11 +38,13 @@ public class ManagerStoreListFragment extends Fragment {
     final static int MESSAGE_UPDATE_TEXT_CHILD_THREAD =1;
     final static int MESSAGE_SHOW_TOAST_THREAD =2;
 
-    ArrayList<ManagerStoreListAdapter.CustomerProduct> mProducts = new ArrayList<ManagerStoreListAdapter.CustomerProduct>();
-    ManagerStoreListAdapter mProductsAdapter = null;
-    RecyclerView mProductsView = null;
+    ArrayList<ManagerStoreListAdapter.CustomerProduct> mProducts = new ArrayList();
+    ManagerStoreListAdapter mStoresAdapter = null;
+    RecyclerView mStoresView = null;
     FloatingActionButton mAddStoreFab = null;
     GetGetStoreTask mGetGetStoreTask = null;
+
+    AlertDialog mAddDialog = null;
 
     public ManagerStoreListFragment() {
     }
@@ -59,13 +63,13 @@ public class ManagerStoreListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_manager_store_list, container, false);
 
-        mProductsAdapter = new ManagerStoreListAdapter(getContext(), mProducts);
+        mStoresAdapter = new ManagerStoreListAdapter(getContext(), mProducts);
 
-        mProductsView = (RecyclerView) rootView.findViewById(R.id.product_recycler_view);
-        mProductsView.setHasFixedSize(true);
-        mProductsView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mProductsView.setItemAnimator(new ScaleUpAndDownItemAnimator());
-        mProductsView.setAdapter(mProductsAdapter);
+        mStoresView = (RecyclerView) rootView.findViewById(R.id.product_recycler_view);
+        mStoresView.setHasFixedSize(true);
+        mStoresView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mStoresView.setItemAnimator(new ScaleUpAndDownItemAnimator());
+        mStoresView.setAdapter(mStoresAdapter);
 
         mAddStoreFab = (FloatingActionButton) rootView.findViewById(R.id.add_store_fab);
         mAddStoreFab.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +98,8 @@ public class ManagerStoreListFragment extends Fragment {
                 alertDialogBuilder.setView(dialogView);
 
                 // Create AlertDialog and show.
-                final AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                mAddDialog = alertDialogBuilder.create();
+                mAddDialog.show();
 
                 // When user click the save user data button in the popup dialog.
                 saveButton.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +139,8 @@ public class ManagerStoreListFragment extends Fragment {
                             // form field with an error.
                             focusView.requestFocus();
                         } else {
-
+                            AddStoreTask addStoreTask = new AddStoreTask(name, description, icon);
+                            addStoreTask.execute();
                         }
                     }
                 });
@@ -143,7 +148,7 @@ public class ManagerStoreListFragment extends Fragment {
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        alertDialog.cancel();
+                        mAddDialog.cancel();
                     }
                 });
             }
@@ -216,14 +221,17 @@ public class ManagerStoreListFragment extends Fragment {
             }
             return result;
         }
-        protected void onPostExecute(String result){
-            super.onPostExecute(result);
+        protected void onPostExecute(String responseText){
+            super.onPostExecute(responseText);
 
+            if (responseText == null) {
+                return;
+            }
             mProducts.clear();
 
             try {
-                Log.e("products-api", result);
-                JSONObject json = new JSONObject(result);
+                Log.e("products-api", responseText);
+                JSONObject json = new JSONObject(responseText);
                 JSONArray stores = json.getJSONArray("stores");
                 JSONObject item;
                 int cnt = stores.length();
@@ -242,7 +250,7 @@ public class ManagerStoreListFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            mProductsAdapter.notifyDataSetChanged();
+            mStoresAdapter.notifyDataSetChanged();
         }
     }
 
@@ -263,12 +271,14 @@ public class ManagerStoreListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params){
-            String stringUrl = String.format("http://173.199.122.197/get_stores.php?stores");
+            String stringUrl = String.format("http://173.199.122.197/add_store.php?" +
+                    "userid=%s&name=%s&description=%s&icon=%s",
+                    G.userInfo.UserID, mName, mDescription, mIcon);
             String result;
             String inputLine;
 
             try {
-                //Create a URL object holding our url
+                //============add=============
                 URL myUrl = new URL(stringUrl);
                 //Create a connection
                 HttpURLConnection connection =(HttpURLConnection)myUrl.openConnection();
@@ -291,21 +301,62 @@ public class ManagerStoreListFragment extends Fragment {
                 streamReader.close();
 
                 result = stringBuilder.toString();
+
+                Log.e("add-api", result);
+
+                JSONObject json = new JSONObject(result);
+                result = json.getString("result");
+                if (!result.equals("success")) {
+                    return null;
+                }
+
+                //============reload store list=============
+                stringUrl = String.format("http://173.199.122.197/get_stores.php?stores");
+                //Create a URL object holding our url
+                myUrl = new URL(stringUrl);
+                //Create a connection
+                connection =(HttpURLConnection)myUrl.openConnection();
+                //Set methods and timeouts
+                connection.setRequestMethod(mMethod);
+                connection.setReadTimeout(READ_TIMEOUT);
+                connection.setConnectTimeout(CONNECTION_TIMEOUT);
+                connection.setRequestProperty("Accept","application/json");
+
+                connection.connect();
+
+                streamReader = new InputStreamReader(connection.getInputStream());
+                reader = new BufferedReader(streamReader);
+                stringBuilder = new StringBuilder();
+                while((inputLine = reader.readLine()) != null){
+                    stringBuilder.append(inputLine);
+                }
+
+                reader.close();
+                streamReader.close();
+
+                result = stringBuilder.toString();
             }
             catch(IOException e){
                 e.printStackTrace();
                 result = null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                result = null;
             }
+            mAddDialog.cancel();
+            Toast.makeText(getContext(), R.string.message_store_added, Toast.LENGTH_LONG).show();
             return result;
         }
-        protected void onPostExecute(String result){
-            super.onPostExecute(result);
-
+        protected void onPostExecute(String responseText){
+            super.onPostExecute(responseText);
+            if (responseText == null) {
+                return;
+            }
             mProducts.clear();
 
             try {
-                Log.e("products-api", result);
-                JSONObject json = new JSONObject(result);
+                Log.e("products-api", responseText);
+                JSONObject json = new JSONObject(responseText);
                 JSONArray stores = json.getJSONArray("stores");
                 JSONObject item;
                 int cnt = stores.length();
@@ -323,8 +374,7 @@ public class ManagerStoreListFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            mProductsAdapter.notifyDataSetChanged();
+            mStoresAdapter.notifyDataSetChanged();
         }
     }
 }

@@ -36,4 +36,6 @@
     <string name="title_name">Name</string>
     <string name="title_description">Description</string>
     <string name="title_icon">Icon</string>
+
+    <string name="message_store_added">Success to add a store</string>
 </resources>

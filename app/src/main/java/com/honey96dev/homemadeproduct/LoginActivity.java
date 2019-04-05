@@ -257,6 +257,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final String responseText) {
+            super.onPostExecute(responseText);
             if (responseText == null) {
                 Snackbar.make(mUsernameSignInButton, R.string.error_invalid_credential, Snackbar.LENGTH_SHORT).show();
                 return;
