@@ -19,5 +19,5 @@
     </string>
     <string name="title_activity_customer_product_list">Product List</string>
     <string name="title_product_list">Products</string>
-    <string name="title_cart_list">Cart</string>
+    <string name="title_cart_list">My Cart</string>
 </resources>
