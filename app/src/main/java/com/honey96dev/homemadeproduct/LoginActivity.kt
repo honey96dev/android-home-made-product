@@ -183,11 +183,7 @@ class LoginActivity : AppCompatActivity() {
             val stringUrl = java.lang.String.format("http://173.199.122.197/login.php?username=%s&password=%s", mUsername, mPassword)
             var result: String?
             var inputLine: String
-            //        try {
-            //            Thread.sleep(2000);
-            //        } catch (InterruptedException e) {
-            //            e.printStackTrace();
-            //        }
+
             try {
                 //Create a URL object holding our url
                 val myUrl = URL(stringUrl)
