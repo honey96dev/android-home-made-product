@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,12 +13,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.honey96dev.homemadeproduct.p4customer.CustomerProductListActivity;
+import com.honey96dev.homemadeproduct.p4manager.ManagerMainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +30,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -66,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
+        mUsernameView = (EditText) findViewById(R.id.username);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -225,13 +224,13 @@ public class LoginActivity extends AppCompatActivity {
                 //Create a URL object holding our url
                 URL myUrl = new URL(stringUrl);
                 //Create a connection
-                HttpURLConnection connection =(HttpURLConnection)myUrl.openConnection();
+                HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
                 //Set methods and timeouts
                 connection.setRequestMethod(METHOD_GET);
                 connection.setReadTimeout(READ_TIMEOUT);
                 connection.setConnectTimeout(CONNECTION_TIMEOUT);
 //            connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-                connection.setRequestProperty("Accept","application/json");
+                connection.setRequestProperty("Accept", "application/json");
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
 
@@ -241,7 +240,7 @@ public class LoginActivity extends AppCompatActivity {
                 InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
                 BufferedReader reader = new BufferedReader(streamReader);
                 StringBuilder stringBuilder = new StringBuilder();
-                while((inputLine = reader.readLine()) != null){
+                while ((inputLine = reader.readLine()) != null) {
                     stringBuilder.append(inputLine);
                 }
 
@@ -249,8 +248,7 @@ public class LoginActivity extends AppCompatActivity {
                 streamReader.close();
 
                 result = stringBuilder.toString();
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
                 result = null;
             }
@@ -259,6 +257,10 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final String responseText) {
+            if (responseText == null) {
+                Snackbar.make(mUsernameSignInButton, R.string.error_invalid_credential, Snackbar.LENGTH_SHORT).show();
+                return;
+            }
             mAuthTask = null;
             showProgress(false);
             Log.e("login-result", responseText);
@@ -281,9 +283,14 @@ public class LoginActivity extends AppCompatActivity {
                     G.userInfo.Password = user.getString("Password");
                     G.userInfo.City = user.getString("City");
                     G.userInfo.Phone = user.getString("Phone");
-                    G.userInfo.Type = user.getString("Type");
+                    G.userInfo.Type = type;
 
-                    Intent intent = new Intent(getBaseContext(), CustomerProductListActivity.class);
+                    Intent intent;
+                    if (type.equals("productive_family")) {
+                        intent = new Intent(getBaseContext(), ManagerMainActivity.class);
+                    } else {
+                        intent = new Intent(getBaseContext(), CustomerProductListActivity.class);
+                    }
                     startActivity(intent);
                     mPasswordView.setText("");
                 } else {

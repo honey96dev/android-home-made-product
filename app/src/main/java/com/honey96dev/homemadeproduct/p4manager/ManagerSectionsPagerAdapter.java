@@ -1,4 +1,4 @@
-package com.honey96dev.homemadeproduct;
+package com.honey96dev.homemadeproduct.p4manager;
 
 
 import android.support.v4.app.Fragment;
@@ -12,15 +12,15 @@ import java.util.ArrayList;
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-public class CustomerSectionsPagerAdapter extends FragmentPagerAdapter {
+public class ManagerSectionsPagerAdapter extends FragmentPagerAdapter {
 
     ArrayList<Fragment> sections;
 
-    public CustomerSectionsPagerAdapter(FragmentManager fm) {
+    public ManagerSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
         sections = new ArrayList<>();
-        sections.add(CustomerProductListFragment.newInstance());
-        sections.add(CustomerCartListFragment.newInstance());
+        sections.add(ManagerStoreListFragment.newInstance());
+        sections.add(ManagerOrderListFragment.newInstance());
     }
 
     @Override

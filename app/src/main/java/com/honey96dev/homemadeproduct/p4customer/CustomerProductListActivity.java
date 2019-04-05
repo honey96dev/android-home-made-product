@@ -1,4 +1,4 @@
-package com.honey96dev.homemadeproduct;
+package com.honey96dev.homemadeproduct.p4customer;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,6 +6,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.honey96dev.homemadeproduct.R;
 
 public class CustomerProductListActivity extends AppCompatActivity {
 
@@ -21,7 +23,7 @@ public class CustomerProductListActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new CustomerSectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

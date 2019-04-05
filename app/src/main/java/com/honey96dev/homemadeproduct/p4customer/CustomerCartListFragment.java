@@ -1,4 +1,4 @@
-package com.honey96dev.homemadeproduct;
+package com.honey96dev.homemadeproduct.p4customer;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.honey96dev.homemadeproduct.R;
 
 public class CustomerCartListFragment extends Fragment {
     EditText txt1;

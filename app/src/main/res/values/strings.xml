@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Home Made Product</string>
+    <string name="activity_login">Login</string>
+    <string name="activity_customer_main">Customer Home</string>
+    <string name="activity_manager_main">Productive Home</string>
+    <string name="activity_customer_product_list">Product List</string>
+    <string name="activity_manager_product_list">M Product List</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_username">Username</string>
@@ -17,7 +22,18 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_customer_product_list">Product List</string>
+
+    <string name="title_store_list">Stores</string>
     <string name="title_product_list">Products</string>
     <string name="title_cart_list">My Cart</string>
+    <string name="title_order_list">Ordered</string>
+    <string name="title_add_store">Add Store</string>
+
+    <string name="label_name">Name:</string>
+    <string name="label_description">Description:</string>
+    <string name="label_icon">Icon:</string>
+
+    <string name="title_name">Name</string>
+    <string name="title_description">Description</string>
+    <string name="title_icon">Icon</string>
 </resources>

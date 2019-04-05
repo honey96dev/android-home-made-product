@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".p4customer.CustomerProductListActivity">
+    tools:context=".p4manager.ManagerMainActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
@@ -22,6 +22,6 @@
         android:layout_marginEnd="0dp"
         android:background="?android:attr/windowBackground"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/navigation_customer" />
+        app:menu="@menu/navigation_manager" />
 
 </RelativeLayout>

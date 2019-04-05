@@ -1,11 +1,10 @@
-package com.honey96dev.homemadeproduct;
+package com.honey96dev.homemadeproduct.p4customer;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.honey96dev.homemadeproduct.R;
 import com.honey96dev.homemadeproduct.tools.ScaleUpAndDownItemAnimator;
 
 import org.json.JSONArray;

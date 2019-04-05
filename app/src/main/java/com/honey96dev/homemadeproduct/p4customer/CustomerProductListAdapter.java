@@ -1,9 +1,6 @@
-package com.honey96dev.homemadeproduct;
+package com.honey96dev.homemadeproduct.p4customer;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,11 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.honey96dev.homemadeproduct.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class CustomerProductListAdapter extends RecyclerView.Adapter<CustomerProductListAdapter.CustomerProductViewHolder> {
@@ -49,9 +44,9 @@ public class CustomerProductListAdapter extends RecyclerView.Adapter<CustomerPro
 
         public CustomerProductViewHolder(View root) {
             super(root);
-            imageView = (ImageView) root.findViewById(R.id.imageView);
-            titleTextView = (TextView) root.findViewById(R.id.titleTextView);
-            descriptionTextView = (TextView) root.findViewById(R.id.descriptionTextView);
+            imageView = (ImageView) root.findViewById(R.id.image_view);
+            titleTextView = (TextView) root.findViewById(R.id.title_text_view);
+            descriptionTextView = (TextView) root.findViewById(R.id.description_text_view);
         }
     }
 
