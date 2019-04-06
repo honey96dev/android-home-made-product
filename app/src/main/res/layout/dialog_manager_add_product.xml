@@ -71,11 +71,28 @@
             android:layout_marginTop="@dimen/dimen_margin2">
 
             <EditText
+                android:id="@+id/price_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_price"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/dimen_textSize5" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_margin2">
+
+            <EditText
                 android:id="@+id/date_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/title_date"
-                android:inputType="text"
+                android:editable="false"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textSize="@dimen/dimen_textSize5" />

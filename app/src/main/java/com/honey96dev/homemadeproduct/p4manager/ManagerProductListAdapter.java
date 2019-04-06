@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.honey96dev.homemadeproduct.R;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class ManagerProductListAdapter extends RecyclerView.Adapter<ManagerProductListAdapter.ManagerProductViewHolder> {
@@ -59,12 +61,16 @@ public class ManagerProductListAdapter extends RecyclerView.Adapter<ManagerProdu
         public ImageView imageView;
         public TextView titleTextView;
         public TextView descriptionTextView;
+        public TextView priceTextView;
+        public TextView dateTextView;
 
         public ManagerProductViewHolder(View root) {
             super(root);
             imageView = (ImageView) root.findViewById(R.id.image_view);
             titleTextView = (TextView) root.findViewById(R.id.title_text_view);
             descriptionTextView = (TextView) root.findViewById(R.id.description_text_view);
+            priceTextView = (TextView) root.findViewById(R.id.price_text_view);
+            dateTextView = (TextView) root.findViewById(R.id.date_text_view);
         }
     }
 
@@ -87,10 +93,16 @@ public class ManagerProductListAdapter extends RecyclerView.Adapter<ManagerProdu
     @Override
     public void onBindViewHolder(ManagerProductViewHolder holder, int position) {
         ManagerProduct product = mDataset.get(position);
-        Picasso.get().load(product.img1)
-                .into(holder.imageView);
+        try {
+            Picasso.get().load(product.img1)
+                    .into(holder.imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         holder.titleTextView.setText(product.name);
         holder.descriptionTextView.setText(product.description);
+        holder.priceTextView.setText(String.format("$%s", product.price));
+        holder.dateTextView.setText(product.date);
         
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class CustomerProductListFragment extends Fragment {
     Handler updateUIHandler = null;
     final static int MESSAGE_UPDATE_TEXT_CHILD_THREAD =1;
-    final static int MESSAGE_SHOW_TOAST_THREAD =2;
+    final static int MESSAGE_SHOW_ADD_PRODUCT_TOAST_THREAD =2;
 
     ArrayList<CustomerProductListAdapter.CustomerProduct> mProducts = new ArrayList<CustomerProductListAdapter.CustomerProduct>();
     CustomerProductListAdapter mProductsAdapter;
@@ -80,7 +80,7 @@ public class CustomerProductListFragment extends Fragment {
                     switch (msg.what) {
                         case MESSAGE_UPDATE_TEXT_CHILD_THREAD:
                             break;
-                        case MESSAGE_SHOW_TOAST_THREAD:
+                        case MESSAGE_SHOW_ADD_PRODUCT_TOAST_THREAD:
                             break;
                     }
                 }

@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.honey96dev.homemadeproduct.p4customer.CustomerProductListActivity;
 import com.honey96dev.homemadeproduct.p4manager.ManagerMainActivity;
+import com.honey96dev.homemadeproduct.p4manager.ManagerProductListFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -217,11 +218,7 @@ public class LoginActivity extends AppCompatActivity {
             String stringUrl = String.format("http://173.199.122.197/login.php?username=%s&password=%s", mUsername, mPassword);
             String result;
             String inputLine;
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+
             try {
                 //Create a URL object holding our url
                 URL myUrl = new URL(stringUrl);
@@ -289,6 +286,7 @@ public class LoginActivity extends AppCompatActivity {
                     G.userInfo.City = user.getString("City");
                     G.userInfo.Phone = user.getString("Phone");
                     G.userInfo.Type = type;
+                    G.userInfo.StoreID = user.getString("StoreID");
 
                     mSuccess = true;
                     mUsernameView.setEnabled(false);
@@ -305,6 +303,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent;
                             if (type.equals("productive_family")) {
                                 intent = new Intent(getBaseContext(), ManagerMainActivity.class);
+                                intent.putExtra(ManagerProductListFragment.STORE_ID_KEY, G.userInfo.StoreID);
                             } else {
                                 intent = new Intent(getBaseContext(), CustomerProductListActivity.class);
                             }

@@ -19,7 +19,7 @@ public class ManagerSectionsPagerAdapter extends FragmentPagerAdapter {
     public ManagerSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
         sections = new ArrayList<>();
-        sections.add(ManagerStoreListFragment.newInstance());
+        sections.add(ManagerProductListFragment.newInstance());
         sections.add(ManagerOrderListFragment.newInstance());
     }
 

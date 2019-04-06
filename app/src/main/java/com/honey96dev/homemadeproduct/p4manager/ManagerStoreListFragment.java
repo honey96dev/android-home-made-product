@@ -142,6 +142,7 @@ public class ManagerStoreListFragment extends Fragment {
                         } else {
                             AddStoreTask addStoreTask = new AddStoreTask(name, description, icon);
                             addStoreTask.execute();
+                            mAddDialog.cancel();
                         }
                     }
                 });

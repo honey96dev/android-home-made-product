@@ -15,9 +15,13 @@ public class ManagerMainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     BottomNavigationView mNavigationView;
 
+    public String mStoreID = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mStoreID = getIntent().getStringExtra(ManagerProductListFragment.STORE_ID_KEY);
+
         setContentView(R.layout.activity_manager_main);
 
         mSectionsPagerAdapter = new ManagerSectionsPagerAdapter(getSupportFragmentManager());

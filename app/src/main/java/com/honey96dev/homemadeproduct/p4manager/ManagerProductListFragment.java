@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,32 +42,46 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ManagerProductListFragment extends Fragment {
+    public final static String STORE_ID_KEY = "STORE_ID_KEY";
     Handler updateUIHandler = null;
     final static int MESSAGE_UPDATE_TEXT_CHILD_THREAD = 1;
-    final static int MESSAGE_SHOW_TOAST_THREAD = 2;
+    final static int MESSAGE_SHOW_ADD_PRODUCT_TOAST_THREAD = 2;
 
     String mStoreID = null;
     ArrayList<ManagerProductListAdapter.ManagerProduct> mProducts = new ArrayList();
-    ManagerProductListAdapter mStoresAdapter = null;
-    RecyclerView mStoresView = null;
+    ManagerProductListAdapter mProductAdapter = null;
+    RecyclerView mProductsView = null;
     FloatingActionButton mAddStoreFab = null;
     GetProductsTask mGetProductsTask = null;
 
     AlertDialog mAddDialog = null;
+
+    public ManagerProductListFragment() {
+    }
+
+    /**
+     * Returns a new instance of this fragment for the given section
+     * number.
+     */
+    public static ManagerProductListFragment newInstance() {
+        ManagerProductListFragment fragment = new ManagerProductListFragment();
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_manager_store_list, container, false);
 
+        createUpdateUiHandler();
 
-        mStoresAdapter = new ManagerProductListAdapter(getContext(), mProducts);
+        mProductAdapter = new ManagerProductListAdapter(getContext(), mProducts);
 
-        mStoresView = (RecyclerView) rootView.findViewById(R.id.product_recycler_view);
-        mStoresView.setHasFixedSize(true);
-        mStoresView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mStoresView.setItemAnimator(new ScaleUpAndDownItemAnimator());
-        mStoresView.setAdapter(mStoresAdapter);
+        mProductsView = (RecyclerView) rootView.findViewById(R.id.product_recycler_view);
+        mProductsView.setHasFixedSize(true);
+        mProductsView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mProductsView.setItemAnimator(new ScaleUpAndDownItemAnimator());
+        mProductsView.setAdapter(mProductAdapter);
 
         mAddStoreFab = (FloatingActionButton) rootView.findViewById(R.id.add_store_fab);
         mAddStoreFab.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +106,7 @@ public class ManagerProductListFragment extends Fragment {
                 final EditText nameView = (EditText) dialogView.findViewById(R.id.name_edit_text);
                 final EditText descriptionView = (EditText) dialogView.findViewById(R.id.description_edit_text);
                 final EditText img1View = (EditText) dialogView.findViewById(R.id.img1_edit_text);
+                final EditText priceView = (EditText) dialogView.findViewById(R.id.price_edit_text);
                 mDateView = (EditText) dialogView.findViewById(R.id.date_edit_text);
                 Button cancelButton = dialogView.findViewById(R.id.cancel_button);
                 Button saveButton = dialogView.findViewById(R.id.save_button);
@@ -101,6 +119,8 @@ public class ManagerProductListFragment extends Fragment {
                 // Create AlertDialog and show.
                 mAddDialog = addProductDialogBuilder.create();
                 mAddDialog.show();
+
+//                mDateView.readon
 
                 mCalendar = Calendar.getInstance();
 
@@ -140,10 +160,34 @@ public class ManagerProductListFragment extends Fragment {
                         String name = nameView.getText().toString();
                         String description = descriptionView.getText().toString();
                         String img1 = img1View.getText().toString();
+                        double price = 0;
+                        try {
+                            price = Double.valueOf(priceView.getText().toString());
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                         String date = mDateView.getText().toString();
 
                         boolean cancel = false;
                         View focusView = null;
+
+                        if (!isDateStringValid(date)) {
+                            mDateView.setError(getString(R.string.error_field_invalid_date));
+                            focusView = mDateView;
+                            cancel = true;
+                        }
+
+                        if (TextUtils.isEmpty(img1)) {
+                            img1View.setError(getString(R.string.error_field_required));
+                            focusView = img1View;
+                            cancel = true;
+                        }
+
+                        if (price <= 0) {
+                            priceView.setError(getString(R.string.error_field_must_positive));
+                            focusView = priceView;
+                            cancel = true;
+                        }
 
                         if (TextUtils.isEmpty(img1)) {
                             img1View.setError(getString(R.string.error_field_required));
@@ -168,8 +212,10 @@ public class ManagerProductListFragment extends Fragment {
                             // form field with an error.
                             focusView.requestFocus();
                         } else {
-                            AddStoreTask addStoreTask = new AddStoreTask(name, description, img1);
-                            addStoreTask.execute();
+                            AddProductTask addProductTask = new AddProductTask(
+                                    name, description, img1, price, date);
+                            addProductTask.execute();
+//                            mAddDialog.cancel();
                         }
                     }
                 });
@@ -181,19 +227,51 @@ public class ManagerProductListFragment extends Fragment {
                     }
                 });
             }
-            private void updateLabel(final Date date) {
-                String myFormat = "MM/dd/yyyy"; //In which you need put here
+            void updateLabel(final Date date) {
+                String myFormat = G.DATE_FORMAT; //In which you need put here
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
                 mDateView.setText(sdf.format(date));
             }
+
+            boolean isDateStringValid(String dateString) {
+                DateFormat format = new SimpleDateFormat(G.DATE_FORMAT);
+                format.setLenient(false);
+
+                try {
+                    format.parse(dateString);
+                    return true;
+                } catch (ParseException e) {
+                    return false;
+                }
+            }
         });
 
-        mStoreID = ((ManagerProductListActivity) getActivity()).mStoreID;
+        mStoreID = ((ManagerMainActivity) getActivity()).mStoreID;
         mGetProductsTask = new GetProductsTask(mStoreID);
         mGetProductsTask.execute();
 
         return rootView;
+    }
+
+    void createUpdateUiHandler()
+    {
+        if(updateUIHandler == null)
+        {
+            updateUIHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    // Means the message is sent from child thread.
+                    switch (msg.what) {
+                        case MESSAGE_UPDATE_TEXT_CHILD_THREAD:
+                            break;
+                        case MESSAGE_SHOW_ADD_PRODUCT_TOAST_THREAD:
+                            Toast.makeText(getContext(), R.string.message_store_added, Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }
+            };
+        }
     }
 
 
@@ -283,31 +361,35 @@ public class ManagerProductListFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            mStoresAdapter.notifyDataSetChanged();
+            mProductAdapter.notifyDataSetChanged();
         }
     }
 
 
-    class AddStoreTask extends AsyncTask<String, Void, String> {
+    class AddProductTask extends AsyncTask<String, Void, String> {
         String mMethod = "GET";
         static final int READ_TIMEOUT = 15000;
         static final int CONNECTION_TIMEOUT = 15000;
 
         String mName;
         String mDescription;
-        String mIcon;
+        String mImg1;
+        double mPrice;
+        String mDate;
 
-        AddStoreTask(String name, String description, String icon) {
+        AddProductTask(String name, String description, String img1, double price, String date) {
             mName = name;
             mDescription = description;
-            mIcon = icon;
+            mImg1 = img1;
+            mPrice = price;
+            mDate = date;
         }
 
         @Override
         protected String doInBackground(String... params) {
-            String stringUrl = String.format("http://173.199.122.197/add_store.php?" +
-                            "userid=%s&name=%s&description=%s&icon=%s",
-                    G.userInfo.UserID, mName, mDescription, mIcon);
+            String stringUrl = String.format("http://173.199.122.197/add_product.php?" +
+                            "storeid=%s&name=%s&description=%s&img1=%s&price=%f&date=%s",
+                    G.userInfo.StoreID, mName, mDescription, mImg1, mPrice, mDate);
             String result;
             String inputLine;
 
@@ -345,7 +427,7 @@ public class ManagerProductListFragment extends Fragment {
                 }
 
                 //============reload store list=============
-                stringUrl = String.format("http://173.199.122.197/get_stores.php?stores");
+                stringUrl = String.format("http://173.199.122.197/get_stores.php?stid=%s", G.userInfo.StoreID);
                 //Create a URL object holding our url
                 myUrl = new URL(stringUrl);
                 //Create a connection
@@ -377,7 +459,12 @@ public class ManagerProductListFragment extends Fragment {
                 result = null;
             }
             mAddDialog.cancel();
-            Toast.makeText(getContext(), R.string.message_store_added, Toast.LENGTH_LONG).show();
+
+            Message message = new Message();
+            message.what = MESSAGE_SHOW_ADD_PRODUCT_TOAST_THREAD;
+//            message.arg1 = 1;
+            updateUIHandler.sendMessage(message);
+
             return result;
         }
 
@@ -416,7 +503,7 @@ public class ManagerProductListFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            mStoresAdapter.notifyDataSetChanged();
+            mProductAdapter.notifyDataSetChanged();
         }
     }
 }

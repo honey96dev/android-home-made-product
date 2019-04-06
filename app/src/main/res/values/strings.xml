@@ -20,6 +20,8 @@
     <string name="error_invalid_credential">Username or password is invalid</string>
     <string name="error_invalid_user_type">Type of user is invalid</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_field_must_positive">This field must be positive</string>
+    <string name="error_field_invalid_date">This date is invalid</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
@@ -39,6 +41,7 @@
     <string name="title_description">Description</string>
     <string name="title_icon">Icon</string>
     <string name="title_img1">Image</string>
+    <string name="title_price">Price</string>
     <string name="title_date">Date</string>
 
     <string name="message_store_added">Success to add a store</string>

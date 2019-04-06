@@ -73,21 +73,12 @@ public class ManagerStoreListAdapter extends RecyclerView.Adapter<ManagerStoreLi
     @Override
     public void onBindViewHolder(ManagerStoreViewHolder holder, int position) {
         final ManagerStore store = mDataset.get(position);
-//        try {
-//            Log.e("icon-url", store.icon);
-//            URL imageUrl = new URL(store.icon);
-//            Bitmap icon = BitmapFactory.decodeStream(imageUrl.openStream());
-//            holder.imageView.setImageBitmap(icon);
-////            holder.imageView.setImageBitmap(BitmapFactory.decodeStream(imageUrl.openConnection() .getInputStream()));
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        holder.imageView.setImageURI(Uri.parse(store.icon));
-        Log.e("icon-url", store.icon);
-        Picasso.get().load(store.icon)
-                .into(holder.imageView);
+        try {
+            Picasso.get().load(store.icon)
+                    .into(holder.imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         holder.titleTextView.setText(store.name);
         holder.descriptionTextView.setText(store.description);
         holder.likesTextView.setText(store.likes);
@@ -96,7 +87,7 @@ public class ManagerStoreListAdapter extends RecyclerView.Adapter<ManagerStoreLi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ManagerProductListActivity.class);
-                intent.putExtra(ManagerProductListActivity.STORE_ID_KEY, store.id);
+                intent.putExtra(ManagerProductListFragment.STORE_ID_KEY, store.id);
                 mContext.startActivity(intent);
             }
         });
