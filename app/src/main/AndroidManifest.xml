@@ -33,6 +33,10 @@
         <activity
             android:name=".p4manager.ManagerProductListActivity"
             android:label="@string/activity_manager_product_list" />
+
+        <activity
+            android:name=".p4manager.ManagerProductActivity"
+            android:label="@string/activity_manager_product_list" />
     </application>
 
 </manifest>

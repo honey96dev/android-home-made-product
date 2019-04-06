@@ -54,7 +54,7 @@ public class ManagerOrderListFragment extends Fragment {
 //        txt5 = (EditText) rootView.findViewById(R.id.txt5);
 //
 //        Message message = new Message();
-//        message.what = MESSAGE_UPDATE_TEXT_CHILD_THREAD;
+//        message.what = MESSAGE_UPDATE_DISPLAY_PRODUCT_INFO_THREAD;
 //        updateUIHandler.sendMessage(message);
 //
 //        Button btn = (Button) rootView.findViewById(R.id.btn);
@@ -94,7 +94,7 @@ public class ManagerOrderListFragment extends Fragment {
 //                            txt5Text = stats.getString("state5");
 //
 //                            Message message = new Message();
-//                            message.what = MESSAGE_UPDATE_TEXT_CHILD_THREAD;
+//                            message.what = MESSAGE_UPDATE_DISPLAY_PRODUCT_INFO_THREAD;
 //                            updateUIHandler.sendMessage(message);
 //                        } catch (ExecutionException e) {
 //                            e.printStackTrace();

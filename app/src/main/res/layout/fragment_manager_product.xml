@@ -100,16 +100,16 @@
         android:layout_marginTop="@dimen/dimen_margin4"
         android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/dimen_margin3"
-            android:text="Cancel"
-            android:textAllCaps="false"
-            android:textSize="@dimen/dimen_textSize6"
-            android:theme="@style/ErrorButton" />
+        <!--<Button-->
+            <!--android:id="@+id/cancel_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center_horizontal"-->
+            <!--android:padding="@dimen/dimen_margin3"-->
+            <!--android:text="Cancel"-->
+            <!--android:textAllCaps="false"-->
+            <!--android:textSize="@dimen/dimen_textSize6"-->
+            <!--android:theme="@style/ErrorButton" />-->
 
 
         <Button

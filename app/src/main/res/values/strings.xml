@@ -37,6 +37,7 @@
     <string name="label_description">Description:</string>
     <string name="label_icon">Icon:</string>
 
+    <string name="title_confirm">Confirm</string>
     <string name="title_name">Name</string>
     <string name="title_description">Description</string>
     <string name="title_icon">Icon</string>
@@ -45,4 +46,6 @@
     <string name="title_date">Date</string>
 
     <string name="message_store_added">Success to add a store</string>
+    <string name="message_product_saved">Success to save product information</string>
+    <string name="message_confirm_back">Do you want to back?</string>
 </resources>

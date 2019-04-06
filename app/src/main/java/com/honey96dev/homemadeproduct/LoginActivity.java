@@ -3,11 +3,13 @@ package com.honey96dev.homemadeproduct;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -309,6 +311,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             startActivity(intent);
                             mPasswordView.setText("");
+                            finish();
                         }
 
                         @Override
@@ -335,5 +338,22 @@ public class LoginActivity extends AppCompatActivity {
             mSuccess = false;
             showProgress(false);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mAuthTask != null) {
+            return;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_confirm)
+                .setMessage(R.string.message_confirm_back)
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        LoginActivity.super.onBackPressed();
+                    }
+                }).create().show();
     }
 }

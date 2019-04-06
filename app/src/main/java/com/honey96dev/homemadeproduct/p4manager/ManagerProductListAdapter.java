@@ -92,7 +92,7 @@ public class ManagerProductListAdapter extends RecyclerView.Adapter<ManagerProdu
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ManagerProductViewHolder holder, int position) {
-        ManagerProduct product = mDataset.get(position);
+        final ManagerProduct product = mDataset.get(position);
         try {
             Picasso.get().load(product.img1)
                     .into(holder.imageView);
@@ -107,8 +107,9 @@ public class ManagerProductListAdapter extends RecyclerView.Adapter<ManagerProdu
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(mContext, ManagerProductListActivity.class);
-//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, ManagerProductActivity.class);
+                intent.putExtra(ManagerProductFragment.PRODUCT_ID_KEY, product.id);
+                mContext.startActivity(intent);
             }
         });
     }
