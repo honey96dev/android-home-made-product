@@ -198,6 +198,7 @@ public class LoginActivity extends AppCompatActivity {
      * the user.
      */
     public class UserLoginTask extends AsyncTask<String, Void, String> {
+        public boolean mSuccess;
         String METHOD_GET = "GET";
         static final int READ_TIMEOUT = 15000;
         static final int CONNECTION_TIMEOUT = 15000;
@@ -206,6 +207,7 @@ public class LoginActivity extends AppCompatActivity {
         final String mPassword;
 
         UserLoginTask(String username, String password) {
+            super();
             mUsername = username;
             mPassword = password;
         }
@@ -258,6 +260,8 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final String responseText) {
             super.onPostExecute(responseText);
+            showProgress(false);
+
             if (responseText == null) {
                 Snackbar.make(mUsernameSignInButton, R.string.error_invalid_credential, Snackbar.LENGTH_SHORT).show();
                 return;
@@ -271,7 +275,7 @@ public class LoginActivity extends AppCompatActivity {
                 String result = json.getString("result");
                 if (result.equals("success")) {
                     JSONObject user = json.getJSONObject("user");
-                    String type = user.getString("Type").toLowerCase();
+                    final String type = user.getString("Type").toLowerCase();
                     if (!type.equals("productive_family") && !type.equals("client")) {
                         Snackbar.make(mUsernameSignInButton, R.string.error_invalid_user_type, Snackbar.LENGTH_LONG).show();
                         return;
@@ -286,15 +290,39 @@ public class LoginActivity extends AppCompatActivity {
                     G.userInfo.Phone = user.getString("Phone");
                     G.userInfo.Type = type;
 
-                    Intent intent;
-                    if (type.equals("productive_family")) {
-                        intent = new Intent(getBaseContext(), ManagerMainActivity.class);
-                    } else {
-                        intent = new Intent(getBaseContext(), CustomerProductListActivity.class);
-                    }
-                    startActivity(intent);
-                    mPasswordView.setText("");
+                    mSuccess = true;
+                    mUsernameView.setEnabled(false);
+                    mPasswordView.setEnabled(false);
+                    mUsernameSignInButton.setEnabled(false);
+//                    mfor.setEnabled(false);
+//                    mUsernameView.setEnabled(false);
+                    Snackbar snackbar = Snackbar.make(mUsernameSignInButton, R.string.success_sign_in, Snackbar.LENGTH_SHORT);
+                    snackbar.addCallback(new Snackbar.Callback() {
+                        @Override
+                        public void onDismissed(Snackbar snackbar, int event) {
+                            int a;
+                            a = 1;
+                            Intent intent;
+                            if (type.equals("productive_family")) {
+                                intent = new Intent(getBaseContext(), ManagerMainActivity.class);
+                            } else {
+                                intent = new Intent(getBaseContext(), CustomerProductListActivity.class);
+                            }
+                            startActivity(intent);
+                            mPasswordView.setText("");
+                        }
+
+                        @Override
+                        public void onShown(Snackbar snackbar) {
+                            int a;
+                            a = 2;
+                        }
+                    });
+                    snackbar.show();
+//                    finish();
                 } else {
+                    mSuccess = false;
+                    showProgress(false);
                     Snackbar.make(mUsernameSignInButton, json.getString("msg"), Snackbar.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
@@ -305,6 +333,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+            mSuccess = false;
             showProgress(false);
         }
     }

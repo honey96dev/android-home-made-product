@@ -15,21 +15,21 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class ManagerStoreListAdapter extends RecyclerView.Adapter<ManagerStoreListAdapter.CustomerProductViewHolder> {
+public class ManagerStoreListAdapter extends RecyclerView.Adapter<ManagerStoreListAdapter.ManagerStoreViewHolder> {
     Context mContext;
-    ArrayList<CustomerProduct> mDataset;
+    ArrayList<ManagerStore> mDataset;
 
     // Dataitem
-    public static class CustomerProduct {
+    public static class ManagerStore {
         public String id;
         public String name;
         public String description;
         public String icon;
         public String likes;
-        public CustomerProduct(String id, String name, String desctiption, String icon, String likes) {
+        public ManagerStore(String id, String name, String description, String icon, String likes) {
             this.id = id;
             this.name = name;
-            this.description = desctiption;
+            this.description = description;
             this.icon = icon;
             this.likes = likes;
         }
@@ -38,14 +38,14 @@ public class ManagerStoreListAdapter extends RecyclerView.Adapter<ManagerStoreLi
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class CustomerProductViewHolder extends RecyclerView.ViewHolder {
+    public static class ManagerStoreViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public ImageView imageView;
         public TextView titleTextView;
         public TextView descriptionTextView;
         public TextView likesTextView;
 
-        public CustomerProductViewHolder(View root) {
+        public ManagerStoreViewHolder(View root) {
             super(root);
             imageView = (ImageView) root.findViewById(R.id.image_view);
             titleTextView = (TextView) root.findViewById(R.id.title_text_view);
@@ -55,27 +55,27 @@ public class ManagerStoreListAdapter extends RecyclerView.Adapter<ManagerStoreLi
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ManagerStoreListAdapter(Context context, ArrayList<CustomerProduct> dataset) {
+    public ManagerStoreListAdapter(Context context, ArrayList<ManagerStore> dataset) {
         mContext = context;
         mDataset = dataset;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public CustomerProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ManagerStoreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_manager_product_item, parent, false);
+        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_manager_store_item, parent, false);
 
-        return new CustomerProductViewHolder(root);
+        return new ManagerStoreViewHolder(root);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(CustomerProductViewHolder holder, int position) {
-        CustomerProduct product = mDataset.get(position);
+    public void onBindViewHolder(ManagerStoreViewHolder holder, int position) {
+        final ManagerStore store = mDataset.get(position);
 //        try {
-//            Log.e("icon-url", product.icon);
-//            URL imageUrl = new URL(product.icon);
+//            Log.e("icon-url", store.icon);
+//            URL imageUrl = new URL(store.icon);
 //            Bitmap icon = BitmapFactory.decodeStream(imageUrl.openStream());
 //            holder.imageView.setImageBitmap(icon);
 ////            holder.imageView.setImageBitmap(BitmapFactory.decodeStream(imageUrl.openConnection() .getInputStream()));
@@ -84,18 +84,19 @@ public class ManagerStoreListAdapter extends RecyclerView.Adapter<ManagerStoreLi
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-//        holder.imageView.setImageURI(Uri.parse(product.icon));
-        Log.e("icon-url", product.icon);
-        Picasso.get().load(product.icon)
+//        holder.imageView.setImageURI(Uri.parse(store.icon));
+        Log.e("icon-url", store.icon);
+        Picasso.get().load(store.icon)
                 .into(holder.imageView);
-        holder.titleTextView.setText(product.name);
-        holder.descriptionTextView.setText(product.description);
-        holder.likesTextView.setText(product.likes);
+        holder.titleTextView.setText(store.name);
+        holder.descriptionTextView.setText(store.description);
+        holder.likesTextView.setText(store.likes);
         
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ManagerProductListActivity.class);
+                intent.putExtra(ManagerProductListActivity.STORE_ID_KEY, store.id);
                 mContext.startActivity(intent);
             }
         });

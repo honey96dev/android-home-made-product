@@ -1,9 +1,9 @@
 package com.honey96dev.homemadeproduct.p4manager;
 
+import android.app.DatePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,39 +32,33 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
-public class ManagerStoreListFragment extends Fragment {
+public class ManagerProductListFragment extends Fragment {
     Handler updateUIHandler = null;
-    final static int MESSAGE_UPDATE_TEXT_CHILD_THREAD =1;
-    final static int MESSAGE_SHOW_TOAST_THREAD =2;
+    final static int MESSAGE_UPDATE_TEXT_CHILD_THREAD = 1;
+    final static int MESSAGE_SHOW_TOAST_THREAD = 2;
 
-    ArrayList<ManagerStoreListAdapter.ManagerStore> mProducts = new ArrayList();
-    ManagerStoreListAdapter mStoresAdapter = null;
+    String mStoreID = null;
+    ArrayList<ManagerProductListAdapter.ManagerProduct> mProducts = new ArrayList();
+    ManagerProductListAdapter mStoresAdapter = null;
     RecyclerView mStoresView = null;
     FloatingActionButton mAddStoreFab = null;
-    GetStoresTask mGetStoresTask = null;
+    GetProductsTask mGetProductsTask = null;
 
     AlertDialog mAddDialog = null;
-
-    public ManagerStoreListFragment() {
-    }
-
-    /**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     */
-    public static ManagerStoreListFragment newInstance() {
-        ManagerStoreListFragment fragment = new ManagerStoreListFragment();
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_manager_store_list, container, false);
 
-        mStoresAdapter = new ManagerStoreListAdapter(getContext(), mProducts);
+
+        mStoresAdapter = new ManagerProductListAdapter(getContext(), mProducts);
 
         mStoresView = (RecyclerView) rootView.findViewById(R.id.product_recycler_view);
         mStoresView.setHasFixedSize(true);
@@ -73,34 +68,65 @@ public class ManagerStoreListFragment extends Fragment {
 
         mAddStoreFab = (FloatingActionButton) rootView.findViewById(R.id.add_store_fab);
         mAddStoreFab.setOnClickListener(new View.OnClickListener() {
+            Calendar mCalendar;
+            EditText mDateView;
+
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder addStoreDialogBuilder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder addProductDialogBuilder = new AlertDialog.Builder(getContext());
                 // Set title, icon, can not cancel properties.
-                addStoreDialogBuilder.setTitle(R.string.title_add_store);
-                addStoreDialogBuilder.setIcon(R.drawable.ic_fiber_new_accent_24dp);
-                addStoreDialogBuilder.setCancelable(true);
+                addProductDialogBuilder.setTitle(R.string.title_add_product);
+                addProductDialogBuilder.setIcon(R.drawable.ic_fiber_new_accent_24dp);
+                addProductDialogBuilder.setCancelable(true);
 
                 // Init popup dialog view and it's ui controls.
                 LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
                 // Inflate the popup dialog from a layout xml file.
-                View dialogView = layoutInflater.inflate(R.layout.dialog_manager_add_store, null);
+                View dialogView = layoutInflater.inflate(R.layout.dialog_manager_add_product, null);
 
                 // Get user input edittext and button ui controls in the popup dialog.
                 final EditText nameView = (EditText) dialogView.findViewById(R.id.name_edit_text);
                 final EditText descriptionView = (EditText) dialogView.findViewById(R.id.description_edit_text);
-                final EditText iconView = (EditText) dialogView.findViewById(R.id.icon_edit_text);
+                final EditText img1View = (EditText) dialogView.findViewById(R.id.img1_edit_text);
+                mDateView = (EditText) dialogView.findViewById(R.id.date_edit_text);
                 Button cancelButton = dialogView.findViewById(R.id.cancel_button);
                 Button saveButton = dialogView.findViewById(R.id.save_button);
 
+                updateLabel(new Date());
                 // Set the inflated layout view object to the AlertDialog builder.
-                addStoreDialogBuilder.setView(dialogView);
-                addStoreDialogBuilder.setCancelable(false);
+                addProductDialogBuilder.setView(dialogView);
+                addProductDialogBuilder.setCancelable(false);
 
                 // Create AlertDialog and show.
-                mAddDialog = addStoreDialogBuilder.create();
+                mAddDialog = addProductDialogBuilder.create();
                 mAddDialog.show();
+
+                mCalendar = Calendar.getInstance();
+
+                final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                          int dayOfMonth) {
+                        // TODO Auto-generated method stub
+                        mCalendar.set(Calendar.YEAR, year);
+                        mCalendar.set(Calendar.MONTH, monthOfYear);
+                        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        updateLabel(mCalendar.getTime());
+                    }
+
+                };
+
+                mDateView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        new DatePickerDialog(getContext(), date, mCalendar.get(Calendar.YEAR),
+                                mCalendar.get(Calendar.MONTH),
+                                mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                    }
+                });
 
                 // When user click the save user data button in the popup dialog.
                 saveButton.setOnClickListener(new View.OnClickListener() {
@@ -108,18 +134,20 @@ public class ManagerStoreListFragment extends Fragment {
                     public void onClick(View view) {
                         nameView.setError(null);
                         descriptionView.setError(null);
-                        iconView.setError(null);
+                        img1View.setError(null);
+                        mDateView.setError(null);
 
                         String name = nameView.getText().toString();
                         String description = descriptionView.getText().toString();
-                        String icon = iconView.getText().toString();
+                        String img1 = img1View.getText().toString();
+                        String date = mDateView.getText().toString();
 
                         boolean cancel = false;
                         View focusView = null;
 
-                        if (TextUtils.isEmpty(icon)) {
-                            iconView.setError(getString(R.string.error_field_required));
-                            focusView = iconView;
+                        if (TextUtils.isEmpty(img1)) {
+                            img1View.setError(getString(R.string.error_field_required));
+                            focusView = img1View;
                             cancel = true;
                         }
 
@@ -140,7 +168,7 @@ public class ManagerStoreListFragment extends Fragment {
                             // form field with an error.
                             focusView.requestFocus();
                         } else {
-                            AddStoreTask addStoreTask = new AddStoreTask(name, description, icon);
+                            AddStoreTask addStoreTask = new AddStoreTask(name, description, img1);
                             addStoreTask.execute();
                         }
                     }
@@ -153,41 +181,37 @@ public class ManagerStoreListFragment extends Fragment {
                     }
                 });
             }
+            private void updateLabel(final Date date) {
+                String myFormat = "MM/dd/yyyy"; //In which you need put here
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+                mDateView.setText(sdf.format(date));
+            }
         });
 
-        mGetStoresTask = new GetStoresTask();
-        mGetStoresTask.execute();
+        mStoreID = ((ManagerProductListActivity) getActivity()).mStoreID;
+        mGetProductsTask = new GetProductsTask(mStoreID);
+        mGetProductsTask.execute();
 
         return rootView;
     }
 
-    void createUpdateUiHandler()
-    {
-        if(updateUIHandler == null)
-        {
-            updateUIHandler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    // Means the message is sent from child thread.
-                    switch (msg.what) {
-                        case MESSAGE_UPDATE_TEXT_CHILD_THREAD:
-                            break;
-                        case MESSAGE_SHOW_TOAST_THREAD:
-                            break;
-                    }
-                }
-            };
-        }
-    }
 
-    class GetStoresTask extends AsyncTask<String, Void, String> {
+    class GetProductsTask extends AsyncTask<String, Void, String> {
         String mMethod = "GET";
         static final int READ_TIMEOUT = 15000;
         static final int CONNECTION_TIMEOUT = 15000;
+        String mStoreID = null;
+
+        GetProductsTask(String storeID) {
+            super();
+            this.mStoreID = storeID;
+        }
 
         @Override
-        protected String doInBackground(String... params){
-            String stringUrl = String.format("http://173.199.122.197/get_stores.php?stores");
+        protected String doInBackground(String... params) {
+            String stringUrl = String.format("http://173.199.122.197/get_stores.php?stid=%s", this.mStoreID);
+            Log.e("product-api", stringUrl);
             String result;
             String inputLine;
 
@@ -195,19 +219,19 @@ public class ManagerStoreListFragment extends Fragment {
                 //Create a URL object holding our url
                 URL myUrl = new URL(stringUrl);
                 //Create a connection
-                HttpURLConnection connection =(HttpURLConnection)myUrl.openConnection();
+                HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
                 //Set methods and timeouts
                 connection.setRequestMethod(mMethod);
                 connection.setReadTimeout(READ_TIMEOUT);
                 connection.setConnectTimeout(CONNECTION_TIMEOUT);
-                connection.setRequestProperty("Accept","application/json");
+                connection.setRequestProperty("Accept", "application/json");
 
                 connection.connect();
 
                 InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
                 BufferedReader reader = new BufferedReader(streamReader);
                 StringBuilder stringBuilder = new StringBuilder();
-                while((inputLine = reader.readLine()) != null){
+                while ((inputLine = reader.readLine()) != null) {
                     stringBuilder.append(inputLine);
                 }
 
@@ -215,14 +239,14 @@ public class ManagerStoreListFragment extends Fragment {
                 streamReader.close();
 
                 result = stringBuilder.toString();
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
                 result = null;
             }
             return result;
         }
-        protected void onPostExecute(String responseText){
+
+        protected void onPostExecute(String responseText) {
             super.onPostExecute(responseText);
 
             if (responseText == null) {
@@ -233,20 +257,28 @@ public class ManagerStoreListFragment extends Fragment {
             try {
                 Log.e("products-api", responseText);
                 JSONObject json = new JSONObject(responseText);
-                JSONArray stores = json.getJSONArray("stores");
+                JSONArray products = json.getJSONArray("products");
                 JSONObject item;
-                int cnt = stores.length();
+                int cnt = products.length();
                 for (int i = 0; i < cnt; i++) {
-                    item = stores.getJSONObject(i);
-                    mProducts.add(new ManagerStoreListAdapter.ManagerStore(
+                    item = products.getJSONObject(i);
+                    mProducts.add(new ManagerProductListAdapter.ManagerProduct(
                             item.getString("id"),
+//                            item.getString("storeID"),
+                            mStoreID,
                             item.getString("name"),
                             item.getString("description"),
-                            item.getString("icon"),
-                            item.getString("likes")
+                            item.getString("img1"),
+                            item.getString("img2"),
+                            item.getString("img3"),
+                            item.getString("img4"),
+                            item.getString("img5"),
+                            item.getString("img6"),
+                            item.getString("price"),
+                            item.getString("date")
                     ));
                 }
-//                stores.getJSONObject()
+//                products.getJSONObject()
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -264,6 +296,7 @@ public class ManagerStoreListFragment extends Fragment {
         String mName;
         String mDescription;
         String mIcon;
+
         AddStoreTask(String name, String description, String icon) {
             mName = name;
             mDescription = description;
@@ -271,9 +304,9 @@ public class ManagerStoreListFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(String... params){
+        protected String doInBackground(String... params) {
             String stringUrl = String.format("http://173.199.122.197/add_store.php?" +
-                    "userid=%s&name=%s&description=%s&icon=%s",
+                            "userid=%s&name=%s&description=%s&icon=%s",
                     G.userInfo.UserID, mName, mDescription, mIcon);
             String result;
             String inputLine;
@@ -282,19 +315,19 @@ public class ManagerStoreListFragment extends Fragment {
                 //============add=============
                 URL myUrl = new URL(stringUrl);
                 //Create a connection
-                HttpURLConnection connection =(HttpURLConnection)myUrl.openConnection();
+                HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
                 //Set methods and timeouts
                 connection.setRequestMethod(mMethod);
                 connection.setReadTimeout(READ_TIMEOUT);
                 connection.setConnectTimeout(CONNECTION_TIMEOUT);
-                connection.setRequestProperty("Accept","application/json");
+                connection.setRequestProperty("Accept", "application/json");
 
                 connection.connect();
 
                 InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
                 BufferedReader reader = new BufferedReader(streamReader);
                 StringBuilder stringBuilder = new StringBuilder();
-                while((inputLine = reader.readLine()) != null){
+                while ((inputLine = reader.readLine()) != null) {
                     stringBuilder.append(inputLine);
                 }
 
@@ -316,19 +349,19 @@ public class ManagerStoreListFragment extends Fragment {
                 //Create a URL object holding our url
                 myUrl = new URL(stringUrl);
                 //Create a connection
-                connection =(HttpURLConnection)myUrl.openConnection();
+                connection = (HttpURLConnection) myUrl.openConnection();
                 //Set methods and timeouts
                 connection.setRequestMethod(mMethod);
                 connection.setReadTimeout(READ_TIMEOUT);
                 connection.setConnectTimeout(CONNECTION_TIMEOUT);
-                connection.setRequestProperty("Accept","application/json");
+                connection.setRequestProperty("Accept", "application/json");
 
                 connection.connect();
 
                 streamReader = new InputStreamReader(connection.getInputStream());
                 reader = new BufferedReader(streamReader);
                 stringBuilder = new StringBuilder();
-                while((inputLine = reader.readLine()) != null){
+                while ((inputLine = reader.readLine()) != null) {
                     stringBuilder.append(inputLine);
                 }
 
@@ -336,8 +369,7 @@ public class ManagerStoreListFragment extends Fragment {
                 streamReader.close();
 
                 result = stringBuilder.toString();
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
                 result = null;
             } catch (JSONException e) {
@@ -348,7 +380,8 @@ public class ManagerStoreListFragment extends Fragment {
             Toast.makeText(getContext(), R.string.message_store_added, Toast.LENGTH_LONG).show();
             return result;
         }
-        protected void onPostExecute(String responseText){
+
+        protected void onPostExecute(String responseText) {
             super.onPostExecute(responseText);
             if (responseText == null) {
                 return;
@@ -358,17 +391,25 @@ public class ManagerStoreListFragment extends Fragment {
             try {
                 Log.e("products-api", responseText);
                 JSONObject json = new JSONObject(responseText);
-                JSONArray stores = json.getJSONArray("stores");
+                JSONArray products = json.getJSONArray("products");
                 JSONObject item;
-                int cnt = stores.length();
+                int cnt = products.length();
                 for (int i = 0; i < cnt; i++) {
-                    item = stores.getJSONObject(i);
-                    mProducts.add(new ManagerStoreListAdapter.ManagerStore(
+                    item = products.getJSONObject(i);
+                    mProducts.add(new ManagerProductListAdapter.ManagerProduct(
                             item.getString("id"),
+//                            item.getString("storeID"),
+                            mStoreID,
                             item.getString("name"),
                             item.getString("description"),
-                            item.getString("icon"),
-                            item.getString("likes")
+                            item.getString("img1"),
+                            item.getString("img2"),
+                            item.getString("img3"),
+                            item.getString("img4"),
+                            item.getString("img5"),
+                            item.getString("img6"),
+                            item.getString("price"),
+                            item.getString("date")
                     ));
                 }
 //                stores.getJSONObject()

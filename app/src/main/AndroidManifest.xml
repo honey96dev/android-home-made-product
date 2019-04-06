@@ -11,15 +11,15 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/activity_login">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,8 +30,9 @@
             android:name=".p4manager.ManagerMainActivity"
             android:label="@string/activity_manager_main" />
 
-        <activity android:name=".p4manager.ManagerProductListActivity"
-            android:label="@string/activity_manager_product_list"></activity>
+        <activity
+            android:name=".p4manager.ManagerProductListActivity"
+            android:label="@string/activity_manager_product_list" />
     </application>
 
 </manifest>

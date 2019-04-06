@@ -13,6 +13,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_forget_password">Forget password?</string>
     <string name="action_create_account">Create account</string>
+    <string name="success_sign_in">Sign in succeeded</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -28,6 +29,7 @@
     <string name="title_cart_list">My Cart</string>
     <string name="title_order_list">Ordered</string>
     <string name="title_add_store">Add Store</string>
+    <string name="title_add_product">Add Product</string>
 
     <string name="label_name">Name:</string>
     <string name="label_description">Description:</string>
@@ -36,6 +38,8 @@
     <string name="title_name">Name</string>
     <string name="title_description">Description</string>
     <string name="title_icon">Icon</string>
+    <string name="title_img1">Image</string>
+    <string name="title_date">Date</string>
 
     <string name="message_store_added">Success to add a store</string>
 </resources>
