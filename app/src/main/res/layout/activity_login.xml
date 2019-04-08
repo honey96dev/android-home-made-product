@@ -93,6 +93,7 @@
                 android:onClick="onUsernameSignInButtonClicked"
                 android:padding="@dimen/dimen_margin3"
                 android:text="@string/action_sign_in_short"
+                android:textColor="@color/white"
                 android:textSize="@dimen/dimen_textSize5"
                 android:textStyle="bold"
                 android:theme="@style/PrimaryButton" />

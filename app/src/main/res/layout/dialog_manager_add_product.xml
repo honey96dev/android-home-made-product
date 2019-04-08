@@ -2,105 +2,125 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="@dimen/dimen_margin4"
     android:layout_marginRight="@dimen/dimen_margin4"
     android:orientation="vertical"
     android:paddingTop="@dimen/dimen_margin4">
-
-
-    <android.support.design.widget.TextInputLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_margin4">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/dimen_margin4"
+        android:layout_marginRight="@dimen/dimen_margin4"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dimen_margin4">
 
-        <EditText
-            android:id="@+id/name_edit_text"
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_0"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/name_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title_name"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/dimen_textSize5" />
+            android:layout_marginTop="@dimen/dimen_margin3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view">
 
-    </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_name"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/dimen_textSize5" />
+
+        </android.support.design.widget.TextInputLayout>
 
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_margin2">
-
-        <EditText
-            android:id="@+id/description_edit_text"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/description_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title_description"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/dimen_textSize5" />
+            android:layout_marginTop="@dimen/dimen_margin1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name_edit_layout">
 
-    </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/description_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_description"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/dimen_textSize5" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_margin2">
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/img1_edit_text"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/price_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title_img1"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/dimen_textSize5" />
+            android:layout_marginTop="@dimen/dimen_margin1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/description_edit_layout">
 
-    </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/price_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_price"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/dimen_textSize5" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_margin2">
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/price_edit_text"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/date_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title_price"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/dimen_textSize5" />
+            android:layout_marginTop="@dimen/dimen_margin1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/price_edit_layout">
 
-    </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/date_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:hint="@string/title_date"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/dimen_textSize5" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_margin2">
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/date_edit_text"
+        <LinearLayout
+            android:id="@+id/button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:editable="false"
-            android:hint="@string/title_date"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/dimen_textSize5" />
+            android:layout_marginTop="@dimen/dimen_margin3"
+            android:gravity="center_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date_edit_layout">
 
-    </android.support.design.widget.TextInputLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_margin4"
-        android:gravity="center_horizontal">
-
-        <Button
+            <Button
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,16 +132,17 @@
             android:theme="@style/ErrorButton" />
 
 
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/dimen_margin3"
-            android:text="Save"
-            android:textAllCaps="false"
-            android:textSize="@dimen/dimen_textSize6"
-            android:theme="@style/PrimaryButton" />
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/dimen_margin3"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textSize="@dimen/dimen_textSize6"
+                android:theme="@style/PrimaryButton" />
 
-    </LinearLayout>
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 </LinearLayout>

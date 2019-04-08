@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.honey96dev.homemadeproduct.G;
 import com.honey96dev.homemadeproduct.R;
 import com.honey96dev.homemadeproduct.tools.ScaleUpAndDownItemAnimator;
 
@@ -95,7 +96,7 @@ public class CustomerProductListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params){
-            String stringUrl = String.format("http://173.199.122.197/get_stores.php?stores");
+            String stringUrl = String.format("%s/get_stores.php?stores", G.SERVER_URL);
             String result;
             String inputLine;
 

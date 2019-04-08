@@ -217,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            String stringUrl = String.format("http://173.199.122.197/login.php?username=%s&password=%s", mUsername, mPassword);
+            String stringUrl = String.format("%s/login.php?username=%s&password=%s", G.SERVER_URL, mUsername, mPassword);
             String result;
             String inputLine;
 

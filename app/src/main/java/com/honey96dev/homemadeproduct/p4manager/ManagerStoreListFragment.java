@@ -188,7 +188,7 @@ public class ManagerStoreListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params){
-            String stringUrl = String.format("http://173.199.122.197/get_stores.php?stores");
+            String stringUrl = String.format("%s/get_stores.php?stores", G.SERVER_URL);
             String result;
             String inputLine;
 
@@ -273,9 +273,9 @@ public class ManagerStoreListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params){
-            String stringUrl = String.format("http://173.199.122.197/add_store.php?" +
+            String stringUrl = String.format("%s/add_store.php?" +
                     "userid=%s&name=%s&description=%s&icon=%s",
-                    G.userInfo.UserID, mName, mDescription, mIcon);
+                    G.SERVER_URL, G.userInfo.UserID, mName, mDescription, mIcon);
             String result;
             String inputLine;
 
@@ -313,7 +313,7 @@ public class ManagerStoreListFragment extends Fragment {
                 }
 
                 //============reload store list=============
-                stringUrl = String.format("http://173.199.122.197/get_stores.php?stores");
+                stringUrl = String.format("%s/get_stores.php?stores", G.SERVER_URL);
                 //Create a URL object holding our url
                 myUrl = new URL(stringUrl);
                 //Create a connection

@@ -96,7 +96,11 @@ public class ManagerProductListAdapter extends RecyclerView.Adapter<ManagerProdu
         try {
             Picasso.get().load(product.img1)
                     .into(holder.imageView);
+            if (!product.img1.isEmpty()) {
+                holder.imageView.setBackground(null);
+            }
         } catch (Exception e) {
+            holder.imageView.setBackground(mContext.getDrawable(R.drawable.image_border));
             e.printStackTrace();
         }
         holder.titleTextView.setText(product.name);
