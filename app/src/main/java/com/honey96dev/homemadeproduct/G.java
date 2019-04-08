@@ -6,4 +6,6 @@ public class G {
     public static UserInfo userInfo = new UserInfo();
 
     public static final String SERVER_URL = "http://173.199.122.197";
+    public static final String SERVER_SCHEME = "http";
+    public static final String SERVER_IP = "173.199.122.197";
 }

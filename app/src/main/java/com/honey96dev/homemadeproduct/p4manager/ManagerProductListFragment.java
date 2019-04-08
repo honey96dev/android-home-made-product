@@ -255,6 +255,14 @@ public class ManagerProductListFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mGetProductsTask = new GetProductsTask(mStoreID);
+        mGetProductsTask.execute();
+    }
+
     void createUpdateUiHandler()
     {
         if(updateUIHandler == null)

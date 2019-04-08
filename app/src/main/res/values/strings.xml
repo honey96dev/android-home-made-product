@@ -54,5 +54,6 @@
     <string name="message_file_not_found">File not found</string>
     <string name="message_server_error">Server error</string>
     <string name="message_io_error">I/O error</string>
+    <string name="message_error">Error</string>
     <string name="message_confirm_back">Do you want to back?</string>
 </resources>

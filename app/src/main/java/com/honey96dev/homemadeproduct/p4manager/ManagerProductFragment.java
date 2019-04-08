@@ -48,6 +48,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import okhttp3.HttpUrl;
+
 import static android.app.Activity.RESULT_OK;
 
 public class ManagerProductFragment extends Fragment {
@@ -59,6 +61,7 @@ public class ManagerProductFragment extends Fragment {
     final static int MESSAGE_SHOW_FILE_NOT_FOUND_TOAST_THREAD = 4;
     final static int MESSAGE_SHOW_SERVER_ERROR_TOAST_THREAD = 5;
     final static int MESSAGE_SHOW_IO_ERROR_TOAST_THREAD = 6;
+    final static int MESSAGE_SHOW_ERROR_TOAST_THREAD = 7;
 
     final static int REQUEST_GET_SINGLE_FILE = 1;
 
@@ -164,7 +167,16 @@ public class ManagerProductFragment extends Fragment {
                         if (mImageUri != null) {
                             imagePath = Uri2Path.getPath(getContext(), mImageUri);
                         }
-                        saveProduct(imagePath);
+                        if (!saveProduct(imagePath)) {
+                            Message message = new Message();
+                            message.what = MESSAGE_SHOW_ERROR_TOAST_THREAD;
+                            updateUIHandler.sendMessage(message);
+                            return;
+                        }
+
+                        Message message = new Message();
+                        message.what = MESSAGE_UPDATE_DISPLAY_PRODUCT_INFO_THREAD;
+                        updateUIHandler.sendMessage(message);
 //                        saveProduct(mImageUri);
 
                         SaveProductTask addProductTask = new SaveProductTask(
@@ -224,6 +236,9 @@ public class ManagerProductFragment extends Fragment {
                         case MESSAGE_SHOW_IO_ERROR_TOAST_THREAD:
                             Toast.makeText(getContext(), R.string.message_io_error, Toast.LENGTH_LONG).show();
                             break;
+                        case MESSAGE_SHOW_ERROR_TOAST_THREAD:
+                            Toast.makeText(getContext(), R.string.message_error, Toast.LENGTH_LONG).show();
+                            break;
                     }
                 }
             };
@@ -273,7 +288,7 @@ public class ManagerProductFragment extends Fragment {
     }
 
     //    public int saveProduct(final Uri imageUri) {
-    public int saveProduct(final String imageUri) {
+    public boolean saveProduct(final String imageUri) {
         if (imageUri != null) {
 
             try {
@@ -370,6 +385,13 @@ public class ManagerProductFragment extends Fragment {
                             streamReader.close();
 
                             String result = stringBuilder.toString();
+
+                            JSONObject json = new JSONObject(result);
+                            result = json.getString("result");
+                            if (!result.equals("success")) {
+                                return false;
+                            }
+                            mImg1 = json.getString("msg");
                             Log.e("save-api-result", result);
                         }
 
@@ -378,6 +400,7 @@ public class ManagerProductFragment extends Fragment {
                         dos.flush();
                         dos.close();
 
+                        return true;
                     } catch (Exception e) {
 
                         // dialog.dismiss();
@@ -394,10 +417,10 @@ public class ManagerProductFragment extends Fragment {
 
                 ex.printStackTrace();
             }
-            return 0;
+            return false;
         }
 
-        return 0;
+        return false;
     }
 
     class GetProductTask extends AsyncTask<String, Void, String> {
@@ -516,8 +539,20 @@ public class ManagerProductFragment extends Fragment {
         @Override
         protected Boolean doInBackground(String... params) {
             String stringUrl = String.format("%s/save_product.php?" +
-                            "storeid=%s&name=%s&description=%s&img1=%s&price=%f&date=%s",
-                    G.SERVER_URL, G.userInfo.StoreID, mName, mDescription, mImg1, mPrice, mDate);
+                            "pid=%s&name=%s&description=%s&img1=%s&price=%f&date=%s",
+                    G.SERVER_URL, mProductID, mName, mDescription, mImg1, mPrice, mDate);
+            HttpUrl url = new HttpUrl.Builder()
+                    .scheme(G.SERVER_SCHEME)
+                    .host(G.SERVER_IP)
+                    .addPathSegment("save_product.php")
+                    .addQueryParameter("pid", mProductID)
+                    .addQueryParameter("name", mName)
+                    .addQueryParameter("description", mDescription)
+                    .addQueryParameter("img1", mImg1)
+                    .addQueryParameter("price", String.valueOf(mPrice))
+                    .addQueryParameter("date", mDate)
+                    .build();
+            stringUrl = url.toString();
             String result;
             String inputLine;
 
@@ -530,7 +565,7 @@ public class ManagerProductFragment extends Fragment {
                 connection.setRequestMethod(mMethod);
                 connection.setReadTimeout(READ_TIMEOUT);
                 connection.setConnectTimeout(CONNECTION_TIMEOUT);
-                connection.setRequestProperty("Accept", "application/json");
+//                connection.setRequestProperty("Accept", "application/json");
 
                 connection.connect();
 
