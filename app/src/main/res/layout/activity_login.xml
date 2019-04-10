@@ -10,11 +10,11 @@
     android:paddingTop="@dimen/dimen_0"
     android:paddingRight="@dimen/dimen_0"
     android:paddingBottom="@dimen/dimen_0"
-    tools:context=".LoginActivity">
+    tools:context=".user.LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar
-        android:id="@+id/login_progress"
+        android:id="@+id/signup_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         android:visibility="gone" />
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/signup_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/dimen_margin7"
@@ -39,7 +39,7 @@
                 android:layout_width="195dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="@dimen/dimen_margin9"
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
                 android:src="@drawable/ic_logo"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/username"
+                    android:id="@+id/username_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_username"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/password_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"

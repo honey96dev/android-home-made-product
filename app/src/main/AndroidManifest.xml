@@ -16,13 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name=".user.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".user.SignupActivity"
+            android:label="@string/activity_signup" />
         <activity
             android:name=".p4customer.CustomerProductListActivity"
             android:label="@string/activity_customer_main" />

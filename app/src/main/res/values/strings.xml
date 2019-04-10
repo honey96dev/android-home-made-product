@@ -1,14 +1,25 @@
 <resources>
     <string name="app_name">Home Made Product</string>
     <string name="activity_login">Login</string>
+    <string name="activity_signup">Sign up</string>
     <string name="activity_customer_main">Customer Home</string>
     <string name="activity_manager_main">Productive Home</string>
     <string name="activity_customer_product_list">Product List</string>
     <string name="activity_manager_product_list">M Product List</string>
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
     <string name="prompt_username">Username</string>
+    <string name="prompt_fistname">First_name</string>
+    <string name="prompt_lastname">Last Name</string>
+    <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+    <string name="prompt_password2">Confirm Password</string>
+    <string name="prompt_city">City</string>
+    <string name="prompt_phone">Mobile Phone</string>
+    <string name="prompt_usertype">User Type</string>
+    <string-array name="user_type_arrays">
+        <item>Customer</item>
+        <item>Store Manager</item>
+    </string-array>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_forget_password">Forget password?</string>
@@ -22,6 +33,9 @@
     <string name="error_field_required">This field is required</string>
     <string name="error_field_must_positive">This field must be positive</string>
     <string name="error_field_invalid_date">This date is invalid</string>
+    <string name="error_password2_not_match">Password is mismatch</string>
+    <string name="error_invalid_phone">This phone number is invalid</string>
+    <string name="error_user_type_required">User Type is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
