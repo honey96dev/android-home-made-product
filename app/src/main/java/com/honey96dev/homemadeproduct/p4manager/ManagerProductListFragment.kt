@@ -16,7 +16,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
 
@@ -24,7 +23,6 @@ import com.honey96dev.homemadeproduct.tools.G
 import com.honey96dev.homemadeproduct.R
 import com.honey96dev.homemadeproduct.tools.ScaleUpAndDownItemAnimator
 
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -33,7 +31,6 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.ArrayList

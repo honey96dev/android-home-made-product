@@ -12,8 +12,6 @@ import android.widget.TextView
 import com.honey96dev.homemadeproduct.R
 import com.squareup.picasso.Picasso
 
-import org.w3c.dom.Text
-
 import java.util.ArrayList
 
 class ManagerProductListAdapter// Provide a suitable constructor (depends on the kind of dataset)

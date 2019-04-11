@@ -8,20 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.honey96dev.homemadeproduct.R
-import com.squareup.picasso.Picasso
-import java.util.*
 
-class ManagerStoreListAdapter// Provide a suitable constructor (depends on the kind of dataset)
-(internal var mContext: Context, internal var mDataset: ArrayList<ManagerStore>) : RecyclerView.Adapter<ManagerStoreListAdapter.ManagerStoreViewHolder>() {
+import com.honey96dev.homemadeproduct.R
+import com.honey96dev.homemadeproduct.p4customer.CustomerProductListActivity
+import com.squareup.picasso.Picasso
+
+import java.util.ArrayList
+
+class CustomerStoreListAdapter// Provide a suitable constructor (depends on the kind of dataset)
+(internal var mContext: Context, internal var mDataset: ArrayList<CustomerStore>) : RecyclerView.Adapter<CustomerStoreListAdapter.CustomerStoreViewHolder>() {
 
     // Dataitem
-    class ManagerStore(var id: String, var name: String, var description: String, var icon: String, var likes: String)
+    class CustomerStore(var id: String, var name: String, var description: String, var icon: String, var likes: String)
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    class ManagerStoreViewHolder(root: View) : RecyclerView.ViewHolder(root) {
+    class CustomerStoreViewHolder(root: View) : RecyclerView.ViewHolder(root) {
         // each data item is just a string in this case
         var imageView: ImageView
         var titleTextView: TextView
@@ -37,15 +40,15 @@ class ManagerStoreListAdapter// Provide a suitable constructor (depends on the k
     }
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagerStoreViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomerStoreViewHolder {
         // create a new view
-        val root = LayoutInflater.from(parent.context).inflate(R.layout.recycler_item_manager_store_item, parent, false)
+        val root = LayoutInflater.from(parent.context).inflate(R.layout.recycler_item_customer_store_item, parent, false)
 
-        return ManagerStoreViewHolder(root)
+        return CustomerStoreViewHolder(root)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(holder: ManagerStoreViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CustomerStoreViewHolder, position: Int) {
         val store = mDataset[position]
         try {
             Picasso.get().load(store.icon)
@@ -59,8 +62,8 @@ class ManagerStoreListAdapter// Provide a suitable constructor (depends on the k
         holder.likesTextView.text = store.likes
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(mContext, ManagerProductListAdapter::class.java)
-            intent.putExtra(ManagerProductListFragment.STORE_ID_KEY, store.id)
+            val intent = Intent(mContext, CustomerProductListActivity::class.java)
+            intent.putExtra(CustomerProductListFragment.STORE_ID_KEY, store.id)
             mContext.startActivity(intent)
         }
     }

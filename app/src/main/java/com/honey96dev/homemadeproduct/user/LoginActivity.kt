@@ -3,7 +3,6 @@ package com.honey96dev.homemadeproduct.user
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
@@ -13,7 +12,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -22,7 +20,7 @@ import android.widget.TextView
 
 import com.honey96dev.homemadeproduct.tools.G
 import com.honey96dev.homemadeproduct.R
-import com.honey96dev.homemadeproduct.p4customer.CustomerProductListActivity
+import com.honey96dev.homemadeproduct.p4customer.CustomerMainActivity
 import com.honey96dev.homemadeproduct.p4manager.ManagerMainActivity
 import com.honey96dev.homemadeproduct.p4manager.ManagerProductListFragment
 
@@ -71,8 +69,8 @@ class LoginActivity : AppCompatActivity() {
         mLoginFormView = findViewById(R.id.signup_form)
         mProgressView = findViewById(R.id.signup_progress)
 
-//        mUsernameView.setText("usertest")
-//        mPasswordView.setText("123456")
+        mUsernameView!!.setText("userclient")
+        mPasswordView!!.setText("123456")
     }
 
     fun onUsernameSignInButtonClicked(v: View) {
@@ -278,7 +276,7 @@ class LoginActivity : AppCompatActivity() {
                         intent = Intent(baseContext, ManagerMainActivity::class.java)
                         intent.putExtra(ManagerProductListFragment.STORE_ID_KEY, G.userInfo.StoreID)
                     } else {
-                        intent = Intent(baseContext, CustomerProductListActivity::class.java)
+                        intent = Intent(baseContext, CustomerMainActivity::class.java)
                     }
                     startActivity(intent)
                     mPasswordView!!.setText("")
@@ -294,7 +292,7 @@ class LoginActivity : AppCompatActivity() {
                     //                                intent = new Intent(getBaseContext(), ManagerMainActivity.class);
                     //                                intent.putExtra(ManagerProductListFragment.STORE_ID_KEY, G.userInfo.StoreID);
                     //                            } else {
-                    //                                intent = new Intent(getBaseContext(), CustomerProductListActivity.class);
+                    //                                intent = new Intent(getBaseContext(), CustomerMainActivity.class);
                     //                            }
                     //                            startActivity(intent);
                     //                            mPasswordView.setText("");

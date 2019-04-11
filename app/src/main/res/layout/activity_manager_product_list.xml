@@ -23,7 +23,7 @@
         <!--android:scaleType="center"-->
         <!--android:src="@drawable/ic_add_white_24dp" />-->
     <fragment
-        android:name="com.honey96dev.homemadeproduct.p4manager.ManagerProductListFragment"
+        android:name="com.honey96dev.homemadeproduct.p4manager.CustomerProductListFragment"
         android:id="@+id/fooFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

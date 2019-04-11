@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".p4customer.CustomerProductListActivity" >
+    tools:context=".p4manager.ManagerMainActivity" >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cart_recycler_view"

@@ -1,22 +1,29 @@
-package com.honey96dev.homemadeproduct.p4customer
+package com.honey96dev.homemadeproduct.p4manager
 
+import android.app.DatePickerDialog
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 
 import com.honey96dev.homemadeproduct.tools.G
 import com.honey96dev.homemadeproduct.R
+import com.honey96dev.homemadeproduct.p4customer.CustomerProductListActivity
 import com.honey96dev.homemadeproduct.tools.ScaleUpAndDownItemAnimator
 
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -25,34 +32,50 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class CustomerProductListFragment : Fragment() {
     internal var updateUIHandler: Handler? = null
 
-    internal var mProducts = ArrayList<CustomerProductListAdapter.CustomerProduct>()
-    internal var mProductsAdapter: CustomerProductListAdapter? = null
+    internal var mStoreID: String? = null
+    internal var mProducts: ArrayList<CustomerProductListAdapter.CustomerProduct> = ArrayList()
+    internal var mProductAdapter: CustomerProductListAdapter? = null
     internal var mProductsView: RecyclerView? = null
-    internal var mCustomerProductsTask: CustomerProductsTask? = null
+    internal var mGetProductsTask: GetProductsTask? = null
+
+    internal var mAddDialog: AlertDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_customer_product_list, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_manager_product_list, container, false)
 
-        mProductsAdapter = CustomerProductListAdapter(context!!, mProducts)
+        createUpdateUiHandler()
+
+        mProductAdapter = CustomerProductListAdapter(context!!, mProducts)
 
         mProductsView = rootView.findViewById<View>(R.id.product_recycler_view) as RecyclerView
         mProductsView!!.setHasFixedSize(true)
         mProductsView!!.layoutManager = LinearLayoutManager(context)
         mProductsView!!.itemAnimator = ScaleUpAndDownItemAnimator()
-        mProductsView!!.adapter = mProductsAdapter
+        mProductsView!!.adapter = mProductAdapter
 
-
-
-        mCustomerProductsTask = CustomerProductsTask()
-        mCustomerProductsTask!!.execute()
+        mStoreID = (activity as CustomerProductListActivity).mStoreID
+        mGetProductsTask = GetProductsTask(mStoreID!!)
+        mGetProductsTask!!.execute()
 
         return rootView
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mGetProductsTask = GetProductsTask(mStoreID!!)
+        mGetProductsTask!!.execute()
     }
 
     internal fun createUpdateUiHandler() {
@@ -63,21 +86,27 @@ class CustomerProductListFragment : Fragment() {
                     when (msg.what) {
                         MESSAGE_UPDATE_TEXT_CHILD_THREAD -> {
                         }
-                        MESSAGE_SHOW_ADD_PRODUCT_TOAST_THREAD -> {
-                        }
+                        MESSAGE_SHOW_ADD_PRODUCT_TOAST_THREAD -> Toast.makeText(context, R.string.message_store_added, Toast.LENGTH_LONG).show()
                     }
                 }
             }
         }
     }
 
-    internal inner class CustomerProductsTask : AsyncTask<String, Void, String>() {
+
+    internal inner class GetProductsTask(storeID: String) : AsyncTask<String, Void, String>() {
         var mMethod = "GET"
+        var mStoreID: String? = null
         val READ_TIMEOUT = 15000
         val CONNECTION_TIMEOUT = 15000
 
+        init {
+            this.mStoreID = storeID
+        }
+
         override fun doInBackground(vararg params: String): String? {
-            val stringUrl = String.format("%s/get_stores.php?stores", G.SERVER_URL)
+            val stringUrl = String.format("%s/get_stores.php?stid=%s", G.SERVER_URL, this.mStoreID)
+            Log.e("product-api", stringUrl)
             var result: String?
             var inputLine: String
 
@@ -112,37 +141,49 @@ class CustomerProductListFragment : Fragment() {
             return result
         }
 
-        override fun onPostExecute(result: String) {
-            super.onPostExecute(result)
+        override fun onPostExecute(responseText: String?) {
+            super.onPostExecute(responseText)
 
+            if (responseText == null) {
+                return
+            }
             mProducts.clear()
 
             try {
-                Log.e("products-api", result)
-                val json = JSONObject(result)
-                val stores = json.getJSONArray("stores")
+                Log.e("products-api", responseText)
+                val json = JSONObject(responseText)
+                val products = json.getJSONArray("products")
                 var item: JSONObject
-                val cnt = stores.length()
+                val cnt = products.length()
                 for (i in 0 until cnt) {
-                    item = stores.getJSONObject(i)
+                    item = products.getJSONObject(i)
                     mProducts.add(CustomerProductListAdapter.CustomerProduct(
                             item.getString("id"),
+                            //                            item.getString("storeID"),
+                            mStoreID!!,
                             item.getString("name"),
                             item.getString("description"),
-                            item.getString("icon"),
-                            item.getString("likes")
+                            item.getString("img1"),
+                            item.getString("img2"),
+                            item.getString("img3"),
+                            item.getString("img4"),
+                            item.getString("img5"),
+                            item.getString("img6"),
+                            item.getString("price"),
+                            item.getString("date")
                     ))
                 }
-                //                stores.getJSONObject()
+                //                products.getJSONObject()
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
 
-            mProductsAdapter!!.notifyDataSetChanged()
+            mProductAdapter!!.notifyDataSetChanged()
         }
     }
 
     companion object {
+        val STORE_ID_KEY = "STORE_ID_KEY"
         internal val MESSAGE_UPDATE_TEXT_CHILD_THREAD = 1
         internal val MESSAGE_SHOW_ADD_PRODUCT_TOAST_THREAD = 2
 

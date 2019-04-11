@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.util.Log
+import com.honey96dev.homemadeproduct.p4manager.CustomerStoreListFragment
 
 import java.util.ArrayList
 
@@ -18,7 +19,7 @@ class CustomerSectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(f
 
     init {
         sections = ArrayList()
-        sections.add(CustomerProductListFragment.newInstance())
+        sections.add(CustomerStoreListFragment.newInstance())
         sections.add(CustomerCartListFragment.newInstance())
     }
 

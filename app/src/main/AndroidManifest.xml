@@ -27,19 +27,20 @@
             android:name=".user.SignupActivity"
             android:label="@string/activity_signup" />
         <activity
-            android:name=".p4customer.CustomerProductListActivity"
-            android:label="@string/activity_customer_main" />
-        <activity
             android:name=".p4manager.ManagerMainActivity"
             android:label="@string/activity_manager_main" />
-
         <activity
             android:name=".p4manager.ManagerProductListActivity"
             android:label="@string/activity_manager_product_list" />
-
         <activity
             android:name=".p4manager.ManagerProductActivity"
-            android:label="@string/activity_manager_product_list" />
+            android:label="@string/activity_manager_product" />
+        <activity
+            android:name=".p4customer.CustomerMainActivity"
+            android:label="@string/activity_customer_main" />
+        <activity
+            android:name=".p4customer.CustomerProductListActivity"
+            android:label="@string/activity_customer_product_list" />
     </application>
 
 </manifest>

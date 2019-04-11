@@ -3,13 +3,10 @@ package com.honey96dev.homemadeproduct.user
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
@@ -18,23 +15,16 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-
 import com.honey96dev.homemadeproduct.R
-import com.honey96dev.homemadeproduct.p4customer.CustomerProductListActivity
-import com.honey96dev.homemadeproduct.p4manager.ManagerMainActivity
-import com.honey96dev.homemadeproduct.p4manager.ManagerProductListFragment
 import com.honey96dev.homemadeproduct.tools.G
-
+import okhttp3.HttpUrl
 import org.json.JSONException
 import org.json.JSONObject
-
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-
-import okhttp3.HttpUrl
 
 /**
  * A login screen that offers login via email/password.

@@ -32,7 +32,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.ArrayList
 
-class ManagerStoreListFragment : Fragment() {
+class CustomerStoreListFragment : Fragment() {
     internal var updateUIHandler: Handler? = null
 
     internal var mProducts: ArrayList<CustomerStoreListAdapter.CustomerStore> = ArrayList()
