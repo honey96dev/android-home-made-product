@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.honey96dev.homemadeproduct.R
+import com.honey96dev.homemadeproduct.p4customer.CustomerProductActivity
 import com.squareup.picasso.Picasso
 import java.util.*
 
@@ -74,11 +75,11 @@ class CustomerProductListAdapter// Provide a suitable constructor (depends on th
         holder.priceTextView.text = String.format("$%s", product.price)
         holder.dateTextView.text = product.date
 
-//        holder.itemView.setOnClickListener {
-//            val intent = Intent(mContext, ManagerProductActivity::class.java)
-//            intent.putExtra(ManagerProductFragment.PRODUCT_ID_KEY, product.id)
-//            mContext.startActivity(intent)
-//        }
+        holder.itemView.setOnClickListener {
+            val intent = Intent(mContext, CustomerProductActivity::class.java)
+            intent.putExtra(ManagerProductFragment.PRODUCT_ID_KEY, product.id)
+            mContext.startActivity(intent)
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

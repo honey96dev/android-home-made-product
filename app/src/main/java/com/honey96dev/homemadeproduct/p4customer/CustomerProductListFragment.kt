@@ -52,7 +52,7 @@ class CustomerProductListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_manager_product_list, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_customer_product_list, container, false)
 
         createUpdateUiHandler()
 

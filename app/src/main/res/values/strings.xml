@@ -7,6 +7,7 @@
     <string name="activity_manager_product">Edit Product</string>
     <string name="activity_customer_main">Customer Home</string>
     <string name="activity_customer_product_list">Product List</string>
+    <string name="activity_customer_product">Product</string>
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
     <string name="prompt_fistname">First_name</string>
@@ -25,6 +26,8 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_forget_password">Forget password?</string>
     <string name="action_create_account">Create account</string>
+    <string name="action_save">Save</string>
+    <string name="action_cart">Cart</string>
     <string name="success_sign_in">Sign in succeeded</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -61,10 +64,12 @@
     <string name="title_date">Date</string>
     <string name="title_quantity">Quantity</string>
     <string name="title_likes">Likes</string>
+    <string name="title_cart_quantity">Cart Quantity</string>
     <string name="title_saving">Saving</string>
 
     <string name="message_store_added">Success to add a store</string>
     <string name="message_product_saved">Success to save product information</string>
+    <string name="message_add_cart">Success to add cart</string>
     <string name="message_invalid_file">File is invalid</string>
     <string name="message_file_not_found">File not found</string>
     <string name="message_server_error">Server error</string>

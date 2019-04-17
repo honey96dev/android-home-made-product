@@ -235,13 +235,12 @@ class LoginActivity : AppCompatActivity() {
         override fun onPostExecute(responseText: String?) {
             super.onPostExecute(responseText)
             showProgress(false)
+            mAuthTask = null
 
             if (responseText == null) {
                 Snackbar.make(mUsernameSignInButton!!, R.string.error_invalid_credential, Snackbar.LENGTH_SHORT).show()
                 return
             }
-            mAuthTask = null
-            showProgress(false)
             Log.e("login-result", responseText)
 
             try {
