@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.util.Log
+import com.honey96dev.homemadeproduct.p4manager.CustomerCartListFragment
 import com.honey96dev.homemadeproduct.p4manager.CustomerStoreListFragment
 
 import java.util.ArrayList

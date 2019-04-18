@@ -66,6 +66,7 @@
     <string name="title_likes">Likes</string>
     <string name="title_cart_quantity">Cart Quantity</string>
     <string name="title_saving">Saving</string>
+    <string name="title_uprice">Unit Price</string>
 
     <string name="message_store_added">Success to add a store</string>
     <string name="message_product_saved">Success to save product information</string>

@@ -40,15 +40,13 @@ class CustomerStoreListFragment : Fragment() {
     internal var mStoresView: RecyclerView? = null
     internal var mGetStoresTask: GetStoresTask? = null
 
-    internal var mAddDialog: AlertDialog? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_customer_store_list, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_customer_cart_list, container, false)
 
         mStoresAdapter = CustomerStoreListAdapter(context!!, mProducts)
 
-        mStoresView = rootView.findViewById<View>(R.id.product_recycler_view) as RecyclerView
+        mStoresView = rootView.findViewById<View>(R.id.cart_recycler_view) as RecyclerView
         mStoresView!!.setHasFixedSize(true)
         mStoresView!!.layoutManager = LinearLayoutManager(context)
         mStoresView!!.itemAnimator = ScaleUpAndDownItemAnimator()

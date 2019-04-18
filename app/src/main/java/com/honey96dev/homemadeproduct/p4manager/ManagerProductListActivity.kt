@@ -12,7 +12,7 @@ class ManagerProductListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //        mStoreID = getIntent().getStringExtra(STORE_ID_KEY);
+        //        mUserID = getIntent().getStringExtra(STORE_ID_KEY);
         setContentView(R.layout.activity_manager_product_list)
     }
 }
