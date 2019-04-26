@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialog_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="@dimen/dimen_margin4"
     android:layout_marginRight="@dimen/dimen_margin4"
     android:orientation="vertical"
     android:paddingTop="@dimen/dimen_margin4">
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,12 +21,12 @@
             android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_0"
+            android:visibility="gone"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/name_edit_layout"
@@ -122,15 +124,15 @@
             app:layout_constraintTop_toBottomOf="@id/date_edit_layout">
 
             <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/dimen_margin3"
-            android:text="Cancel"
-            android:textAllCaps="false"
-            android:textSize="@dimen/dimen_textSize6"
-            android:theme="@style/ErrorButton" />
+                android:id="@+id/cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/dimen_margin3"
+                android:text="@string/action_cancel"
+                android:textAllCaps="false"
+                android:textSize="@dimen/dimen_textSize6"
+                android:theme="@style/ErrorButton" />
 
 
             <Button
@@ -139,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:padding="@dimen/dimen_margin3"
-                android:text="Save"
+                android:text="@string/action_save"
                 android:textAllCaps="false"
                 android:textSize="@dimen/dimen_textSize6"
                 android:theme="@style/PrimaryButton" />

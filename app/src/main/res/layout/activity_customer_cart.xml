@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".p4customer.CustomerProductActivity">
+    tools:context=".p4customer.CustomerCartActivity">
 
     <fragment
-        android:name="com.honey96dev.homemadeproduct.p4customer.CustomerProductFragment"
+        android:name="com.honey96dev.homemadeproduct.p4customer.CustomerCartFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </android.support.design.widget.CoordinatorLayout>

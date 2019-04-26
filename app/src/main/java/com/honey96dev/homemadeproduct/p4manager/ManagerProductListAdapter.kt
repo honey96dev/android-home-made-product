@@ -61,10 +61,12 @@ class ManagerProductListAdapter// Provide a suitable constructor (depends on the
     override fun onBindViewHolder(holder: ManagerProductViewHolder, position: Int) {
         val product = mDataset[position]
         try {
-            Picasso.get().load(product.img1)
-                    .into(holder.imageView)
-            if (!product.img1.isEmpty()) {
+            if (product.img1.isNotBlank()) {
+                Picasso.get().load(product.img1)
+                        .into(holder.imageView)
                 holder.imageView.background = null
+            } else {
+                holder.imageView.setImageBitmap(null)
             }
         } catch (e: Exception) {
             holder.imageView.background = mContext.getDrawable(R.drawable.image_border)

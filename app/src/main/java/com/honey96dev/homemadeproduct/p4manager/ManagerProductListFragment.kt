@@ -85,7 +85,7 @@ class ManagerProductListFragment : Fragment() {
                 // Get user input edittext and button ui controls in the popup dialog.
                 val nameView = dialogView.findViewById<View>(R.id.name_edit_text) as EditText
                 val descriptionView = dialogView.findViewById<View>(R.id.description_edit_text) as EditText
-                val img1View = dialogView.findViewById<View>(R.id.img1_edit_text) as EditText
+//                val img1View = dialogView.findViewById<View>(R.id.img1_edit_text) as EditText
                 val priceView = dialogView.findViewById<View>(R.id.price_edit_text) as EditText
                 mDateView = dialogView.findViewById<View>(R.id.date_edit_text) as EditText
                 val cancelButton = dialogView.findViewById<Button>(R.id.cancel_button)
@@ -123,12 +123,12 @@ class ManagerProductListFragment : Fragment() {
                 saveButton.setOnClickListener {
                     nameView.error = null
                     descriptionView.error = null
-                    img1View.error = null
+//                    img1View.error = null
                     mDateView!!.error = null
 
                     val name = nameView.text.toString()
                     val description = descriptionView.text.toString()
-                    val img1 = img1View.text.toString()
+//                    val img1 = img1View.text.toString()
                     var price = 0.0
                     try {
                         price = java.lang.Double.valueOf(priceView.text.toString())
@@ -146,12 +146,12 @@ class ManagerProductListFragment : Fragment() {
                         focusView = mDateView
                         cancel = true
                     }
-
-                    if (TextUtils.isEmpty(img1)) {
-                        img1View.error = getString(R.string.error_field_required)
-                        focusView = img1View
-                        cancel = true
-                    }
+//
+//                    if (TextUtils.isEmpty(img1)) {
+//                        img1View.error = getString(R.string.error_field_required)
+//                        focusView = img1View
+//                        cancel = true
+//                    }
 
                     if (price <= 0) {
                         priceView.error = getString(R.string.error_field_must_positive)
@@ -159,11 +159,11 @@ class ManagerProductListFragment : Fragment() {
                         cancel = true
                     }
 
-                    if (TextUtils.isEmpty(img1)) {
-                        img1View.error = getString(R.string.error_field_required)
-                        focusView = img1View
-                        cancel = true
-                    }
+//                    if (TextUtils.isEmpty(img1)) {
+//                        img1View.error = getString(R.string.error_field_required)
+//                        focusView = img1View
+//                        cancel = true
+//                    }
 
                     if (TextUtils.isEmpty(description)) {
                         descriptionView.error = getString(R.string.error_field_required)
@@ -183,7 +183,7 @@ class ManagerProductListFragment : Fragment() {
                         focusView!!.requestFocus()
                     } else {
                         val addProductTask = AddProductTask(
-                                name, description, img1, price, date)
+                                name, description, "", price, date)
                         addProductTask.execute()
                         //                            mAddDialog.cancel();
                     }

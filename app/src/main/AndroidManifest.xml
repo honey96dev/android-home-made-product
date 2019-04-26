@@ -44,6 +44,9 @@
         <activity
             android:name=".p4customer.CustomerProductActivity"
             android:label="@string/activity_customer_product" />
+        <activity
+            android:name=".p4customer.CustomerCartActivity"
+            android:label="@string/activity_customer_product" />
     </application>
 
 </manifest>

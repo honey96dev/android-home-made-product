@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.honey96dev.homemadeproduct.R
+import com.honey96dev.homemadeproduct.p4customer.CustomerCartActivity
 import com.honey96dev.homemadeproduct.p4customer.CustomerProductActivity
 import com.squareup.picasso.Picasso
 import java.util.*
@@ -75,11 +76,11 @@ class CustomerCartListAdapter// Provide a suitable constructor (depends on the k
         holder.quantityTextView.text = String.format("Quantity: %s", product.quantity)
         holder.priceTextView.text = String.format("Price: $%s", product.price)
 
-//        holder.itemView.setOnClickListener {
-//            val intent = Intent(mContext, CustomerProductActivity::class.java)
-//            intent.putExtra(ManagerProductFragment.PRODUCT_ID_KEY, product.id)
-//            mContext.startActivity(intent)
-//        }
+        holder.itemView.setOnClickListener {
+            val intent = Intent(mContext, CustomerCartActivity::class.java)
+            intent.putExtra(ManagerProductFragment.PRODUCT_ID_KEY, product.id)
+            mContext.startActivity(intent)
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

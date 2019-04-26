@@ -51,8 +51,15 @@ class CustomerStoreListAdapter// Provide a suitable constructor (depends on the 
     override fun onBindViewHolder(holder: CustomerStoreViewHolder, position: Int) {
         val store = mDataset[position]
         try {
-            Picasso.get().load(store.icon)
-                    .into(holder.imageView)
+//            Picasso.get().load(store.icon)
+//                    .into(holder.imageView)
+            if (store.icon.isNotBlank()) {
+                Picasso.get().load(store.icon)
+                        .into(holder.imageView)
+                holder.imageView.background = null
+            } else {
+                holder.imageView.setImageBitmap(null)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

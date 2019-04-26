@@ -133,7 +133,7 @@ class ManagerProductFragment : Fragment() {
                 //creating new thread to handle Http Operations
                 //                        String imagePath = getRealPathFromURI(mImageUri);
                 var imagePath: String? = null
-                if (mImg1!!.startsWith("file")) {
+                if (!mImg1!!.startsWith("file")) {
                     if (mImageUri != null) {
                         imagePath = Uri2Path.getPath(context!!, mImageUri!!)
                     }
